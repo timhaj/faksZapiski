@@ -1,0 +1,239 @@
+﻿\b rob besede //presledki, tabulatorji, whitespace
+
+
+
+preuizkusimo (1):
+
+1.	man grep | grep -C 100 "."
+ce iscemo po piki, bo oznacil vse, saj je metaznak
+zato moramo dati \.
+
+ce damo oglate oklepajo je to nabor znakov [ab] -> nasel bo a je in z je
+lahko uporabimo [a-z] bo vse od a do z oznacil
+[a-zA-Z0-9] zajame skoraj vse znake
+
+2.	man grep | grep -C 100  "\."
+
+ce iscemo po piki, bo oznacil vse, saj je metaznak
+zato moramo dati \.
+-C pove
+
+3.	man grep | grep -C 100  "\.$"
+samo pike, ki so na koncu vrstice
+
+4.	man grep | grep -C 100  "a."
+prvi znak mora biti a, po njem pa katerikoli znak (tudi a(presledek))
+
+5.	man grep | grep -C 100  ".a."
+en pred en po
+6.	man grep | grep -C 100  "\Bce"
+isce 'ce' ponovitve , ki so znotraj besede
+ce bi dali se \B bo pa tudi whitespace izginil
+\Bce\
+
+7.	man grep | grep -C 100  "ce\b"
+samo kjer se 'ce' pojavi na koncu
+
+8.	man grep | grep -C 100  "the"
+
+poisce vse pojavitve 'the'
+samo besede
+\bthe\b
+
+9.	man grep | grep -C 100  "\<the\>„
+
+enako kot 8.
+
+10.	man grep | grep -C 100  "[yYnN]"
+
+imamo nabor znakov y Y n N
+ce ni nabor znakov je negacija ^
+
+11.	man grep | grep -C 100  "\b[yYnN]"
+kar se zacne z katerimkoli znakom
+
+12.	man grep | grep -C 100  "[a-z]"
+vse male crke
+
+13.	man grep | grep -C 100  "[^a-z]"
+vse kar niso male crke
+tudi presledki, oklepaji, itd.
+
+14.	man grep | grep -C 100  "[a-z0-9]"
+vse a-z in 0-9 znake
+
+15.	man grep | grep -C 100  "[-+0-9]"
+minusi plusi in znaki od 0-9
+
+16.	man grep | grep -C 100  "[^aeiou]"
+komplement te mnozice
+brez teh crk
+
+? nič ali ena ponovitev
+* nič ali več ponovitev
++ ena ali več ponovitev
+{n} ponovitev
+{n,}vec ali enako n ponovitev
+{n,m} od n do m ponovitev
+
+v razsirjeni verziji grepa imamo razsirjene regularne izraze
+
+-E razsirjen grep
+
+preuizkusimo (2):
+1.	man grep | grep    -C 100  "[a-z][a-z]"
+dve mali crki
+
+2.	man grep | grep -E -C 100  "[a-z]{2}"
+enako kot 1.
+dve mali crki
+
+3.	man grep | grep -E -C 100  "ti*"
+t pa kokrkol i -jev 0 ali vec zaradi *
+
+4.	man grep | grep -E -C 100  "(ti)*"
+najde vse ti enkrat ali veckrat
+najde 'titi'
+
+5.	man grep | grep -E -C 100  "([tc])([ho])"
+
+pride enako kot brez oklepaje
+samo znaki t c h o
+
+6.	man grep | grep -E -C 100  "\b[A-Z][a-z]{2}"
+
+velika crka na robu besede potem pa se 2 mali crki
+7.	man grep | grep -E -C 100  "\b[A-Z]?[a-z]{2}"
+? velja samo za eno nazaj to pomeni da \b ostane
+drzi se levega roba tudi ce imamo 2 majhni
+
+8.	man grep | grep -E -C 100  "th.*s"	
+th katerikoli znak 0 ali veckrat in na koncu s
+isce najdaljse mozno (gleda znotraj vrstice)
+
+NAJDALJSE MOZNO UJEMANJE
+9.	man grep | grep -E -C 100  "th[^s]*s"
+th katerikoli znak samo ne 
+NAJKRAJSE MOZNO UJEMANJE
+
+naloge (1):
+
+1. V pomoči ukaza grep poiščite vse nize, ki se začnejo s črko A ali a.
+man grep | grep -E -C 100 '\b[Aa][^ ]*'
+bolje bi bilo ne whitespace ali pa ne besede
+ali pa ^ in \w
+man grep | grep "\b[Aa]\w*"
+
+2. V datoteki /etc/passwd poiščite vse vrstice, kjer se pojavi beseda admin (ne podniz admin).
+
+cat/etc/passwd | grep "\badmin\b"
+3. V datoteki test.txt poiščite vse vrstice, kjer so za besedilom na koncu vrstice presledki.
+
+cat test.txt | grep -E -C 100 " $"
+presledek in konecc vrstice
+vsaj en
+cat test.txt | grep -E -C 100 " +$"
+TOLE JIH BO SE OZNACIL
+
+Kaj predstavljajo naslednji regularni izrazi (s kakšnimi nizi se ujema)?
+4. ".{6}"  	
+6 krat karkol
+
+5. ".{6,}" 	
+6 krat ali vec karkoli
+
+6. "(19|20)[0-9]{2}"   
+
+zacne se na 19 ali 20 in sledita 2 stevki
+
+7. "(+|-)?[0-9]+(\.[0-9]+)?"    
++ ali - ali nic 
+cifra vsaj ena
+. lahko tudi zadnjega dela ni zaradi ?
+cifra vsaj ena
+
+
+8. "(\w+)\1"  
+\w male velike crke _
+
+najde ponovitve npr prvi \w se nadomesti z znakom in potem bo \1 enak znak
+zato bo nasel vse titi
+ii
+zz
+9. "\<([^ ]+)[ ]+\1" 
+npr for foreground
+oznaci oba for-a
+ce bi hoteli samo 2 ponovitvi besede bi dodal desni rob besede
+
+levi rob, vse razen presledka vsaj 1x potem presledek vsaj en in ponovitev prvega
+dve besedi ki se ponovita
+
+10. Kaj predstavlja naslednji regularni izraz (s kakšnimi nizi se ujema)?  Izraz poenostavite tako, da ponavljanja zapišete kot ponavljanja.
+[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} 
+od 1-3 trimestno stevilo.trimestna.trimestna.trimestna
+nepravilna verzija 4.trimestna stevila locena s piko
+ 
+11. Kaj predstavlja naslednji regularni izraz (s kakšnimi nizi se ujema)?
+^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)[0-9][0-9]$
+[.] bo tudi naslo piko ni potrebno pisat [\.]
+
+naloge (2):
+
+Vse naslednje naloge rešujemo z uporabo ukaza sed.
+
+1.	Izpišite prvih 5 vrstic datoteke /etc/passwd.
+cat /etc/passwd | sed "6,$ d"
+$-> konec datoteke
+enako kot cat /etc/passwd | head -5
+
+2.	V izpisu datoteke /etc/passwd zamenjajte pojavitve znaka : s tabulatorjem.
+
+cat /etc/passwd | sed "s/todo/todo/g"
+/g je global zastavica
+
+cat /etc/passwd | sed "s/:/\t/g"
+
+3.	Z uporabo ukaza sed izpišite samo uporabniška imena iz datoteke /etc/passwd.
+cat /etc/passwd | sed  "s/^\([^:]*\).*$/\1/"
+vse do prvega dvopicja in celo vrstic oreplacamo s tem kar smo nasel v oklepaju
+
+
+4.	Z uporabo ukaza sed izpišite vse vrstice iz datoteke /etc/passwd razen vrstice uporabnika student.
+cat etc/passwd | sed "/^student:/ d"
+5.	Z uporabo ukaza sed v izpis datoteke /etc/passwd dodajte oklepaje okrog prve številke v vrstici/vseh številk.
+
+cat /etc/passwd | sed "s/[0-9][0-9]*/(&)/g"
+global zamena vse
+drugace samo prvega
+tuki lahko s (&) shranimo
+
+Kaj naredijo naslednji ukazi?
+
+6.	d '/^student:/ s/\/home\/student/\/home2\/student/g' < /etc/passwd 
+tiste vrstice ki se zacnejo na student jim spremeni na home 2 student
+7.	sed '/^student:/ a\nejc:x:1003:1003:Nejc Gorenjc:/home/nejc:/bin/bash' < /etc/passwd 
+dodal bo novo vrstico uporabnika
+8.	sudo cat /etc/shadow | sed '/^student:/ s/:\([^!].*\):/:!\1:/' | tee izpis.txt
+odklepanje zaklepanje userja
+9.	sed 's/\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):/\5:\2:\3:\4:\1:/' < izpis.txt
+to je pa zajebancija
+premesamo stolpce
+
+
+10.	V datoteko sed.cmd napišite naslednje zaporedje ukazov sed:
+10,16 s/u/a/g
+od 10 do 16 vrsticah zamenamo vse u z a
+10,16 s/o/u/g
+od 10 do 16 vrsitcah zamenjamo o z u itd.
+10,16 s/i/o/g
+10,16 s/e/i/g
+10,16 s/a/e/g
+
+16 i\PREDZADNJA VRSTICA
+a\ append
+i\ insert predzadnjo vrstico
+17,$ d
+konec cele datoteke
+od 17 vrstice do konca datoteke izbrisemo
+
+Kaj se zgodi z besedilom, nad katerim poženemo sed s podanim zaporedjem ukazov?
