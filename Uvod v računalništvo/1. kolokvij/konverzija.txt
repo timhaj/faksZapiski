@@ -1,0 +1,9 @@
+GB = 10^9 -> torej bajti imajo desetiško osnovo
+GiB = 2^30 -> dvojiški bajti (tisti, ki jih dejansko pišeš na koncu)
+Gbit = GB*8 -> 8 bit je en bajt, 8Gbit je 1GB
+
+1 GB je enak -> 10^9 / 2^30
+1 GiB je enak -> 2^30 / 10^9
+------- ^^ če dobiš rezultat v GB, uporabiš križni račun pa dobiš GiB (sam večinoma so naloge sestavljene tako, da dobiš takoj rezultat v GiB) 
+
+GiB in Gbit se deli z 1024, GB pa 10^3 (1000)
