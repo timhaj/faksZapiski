@@ -1,0 +1,122 @@
+10.A.0.0/??
+192.168.B.0/??
+172.16.C.0/??
+
+moje:
+10.0.0.0/??
+192.168.9.0/??
+172.16.9.0/??
+
+---------------------------------------------------------------------------------
+AS65531			AS65532				AS65533	
+Subnet	10.0.0.0/24	Subnet	192.168.9.0/24		Subnet	172.16.9.0/24
+r1.eth0	10.0.0.1/24	r2.eth0	192.168.9.1/24		r3.eth0	172.16.9.1/24
+pc1.eth0 10.0.0.2/24	pc2.eth0 192.168.9.2/24		pc3.eth0 172.16.9.2/24
+
+
+Subnet	1.1.1.0/24
+cfnet-1.2 1.1.1.0/30	cfnet-2.3 1.1.1.4/30	cfnet-3.1 1.1.1.8/30
+r1.eth1	1.1.1.1/30	r2.eth1	1.1.1.5/30	r3.eth1	1.1.1.9/30
+r2.eth2	1.1.1.2/30	r3.eth2	1.1.1.6/30	r1.eth2	1.1.1.10/30
+-------------------------------------------------------------------------------
+_______________________________________________________________________________
+PC1
+ip addr add 10.0.0.2/24 broadcast + dev eth0
+ip route add default via 10.0.0.1 dev eth0
+
+ip r
+traceroute 192.168.9.2
+traceroute 172.16.9.2
+
+--------------------------------------------------------------------------
+PC2
+ip addr add 192.168.9.2/24 broadcast + dev eth0
+ip route add default via 192.168.9.1 dev eth0
+
+ip r
+traceroute 10.0.0.2
+traceroute 172.16.9.2
+-----------------------------------------------------------------------------
+PC3
+ip addr add 172.16.9.2/24 broadcast + dev eth0
+ip route add default via 172.16.9.1 dev eth0
+
+ip r
+traceroute 10.0.0.2
+traceroute 192.168.9.2
+
+_______________________________________________________________________________
+R1
+
+configure
+set interfaces ethernet eth0 address 10.0.0.1/30
+set interfaces ethernet eth1 address 1.1.1.1/30
+set interfaces ethernet eth2 address 1.1.1.10/30
+set protocols bgp 65531 neighbor 1.1.1.2 remote-as '65532'
+set protocols bgp 65531 neighbor 1.1.1.9 remote-as '65533'
+set protocols bgp 65531 parameters router-id 10.0.0.1
+set protocols bgp 65531 network 10.0.0.0/30
+commit
+save
+
+exit
+sleep 30
+show ip bgp summary
+show ip route
+-----------------------------------------------------------------------------------
+R2
+
+configure
+set interfaces ethernet eth0 address 192.168.9.1/30
+set interfaces ethernet eth1 address 1.1.1.5/30
+set interfaces ethernet eth2 address 1.1.1.2/30
+set protocols bgp 65532 neighbor 1.1.1.1 remote-as '65531'
+set protocols bgp 65532 neighbor 1.1.1.6 remote-as '65533'
+set protocols bgp 65532 parameters router-id 192.168.9.1
+set protocols bgp 65532 network 192.168.9.0/30
+commit
+save
+
+exit
+sleep 30
+show ip bgp summary
+show ip route
+-------------------------------------------------------------------------------------------
+R3
+
+configure
+set interfaces ethernet eth0 address 172.16.9.1/30
+set interfaces ethernet eth1 address 1.1.1.9/30
+set interfaces ethernet eth2 address 1.1.1.6/30
+set protocols bgp 65533 neighbor 1.1.1.10 remote-as '65531'
+set protocols bgp 65533 neighbor 1.1.1.5 remote-as '65532'
+set protocols bgp 65533 parameters router-id 172.16.9.1
+set protocols bgp 65533 network 172.16.9.0/30
+commit
+save
+
+exit
+sleep 30
+show ip bgp summary
+show ip route
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,132 @@
+.text
+.org 0x20
+izvorna_koda: .asciz "\n\nstev1: .var 0xf123@ komentar 1\n @prazna vrstica \n stev2: .var 15\nstev3: .var 128\n_start:\n mov r1, #5 @v r1 premakni 5\nmov r2, #1\nukaz3: add r1, #1\nb _start"
+.align
+izvorna_koda_pocisceno: .space 120
+.align
+tabela_oznak: .space 100
+.align
+.global _start
+_start:
+	mov r3, #0 			@za izvorna_koda stevec
+	mov r2, #0 			@za izvorna_koda_pocisceno stevec (ce to koncno vrednost odstejes od r3, ti stevilka pove koliko znakov si pobrisal)
+	mov r4, #0			@sluzi kot flag za vrstice
+	
+beri:
+	adr r0, izvorna_koda
+	ldrb r1, [r0, r3]
+	adr r0, izvorna_koda_pocisceno
+	cmp r1, #64
+	beq odstrani_komentar
+	strb r1, [r0, r2]
+	add r2, r2, #1
+	add r3, r3, #1
+	cmp r1, #32
+	beq odstrani_presledek
+	cmp r1, #00
+	bne beri
+	mov r3, #0
+	mov r2, #0
+	b druga_naloga
+
+odstrani_komentar:
+	adr r0, izvorna_koda
+	ldrb r1, [r0, r3]
+	cmp r1, #'\n'
+	beq beri
+	addne r3, r3, #1
+	bne odstrani_komentar
+
+odstrani_presledek:
+	adr r0, izvorna_koda
+	ldrb r1, [r0, r3]
+	cmp r1, #32
+	bne beri
+	addeq r3, r3, #1
+	beq odstrani_presledek
+
+odstrani_vrstico:
+	adr r0, izvorna_koda_pocisceno
+	ldrb r1, [r0, r3]
+	cmp r1, #10
+	cmpne r1, #32
+	bne druga_naloga
+	addeq r3, r3, #1
+	beq odstrani_vrstico
+
+druga_naloga:
+	adr r0, izvorna_koda_pocisceno
+	ldrb r1, [r0, r3]
+	adr r0, izvorna_koda
+	cmp r1, #10
+	cmpne r1, #32
+	cmpeq r4, #0
+	moveq r4, #1
+	strneb r1, [r0, r2]
+	addne r2, r2, #1
+	add r3, r3, #1
+	cmp r1, #10
+	cmpne r1, #32
+	beq odstrani_vrstico
+	cmp r1, #00
+	bne druga_naloga
+	mov r3, #0
+	mov r2, #0
+	mov r4, #0
+	mov r5, #0
+	b tretja_naloga
+
+kopiraj_oznako:
+	@prvi del -> kopira oznako in doda narekovaj ter presledek na konec
+	adr r0, izvorna_koda
+	ldrb r1, [r0, r2]
+	adr r0, tabela_oznak
+	strb r1, [r0, r5]
+	cmp r2, r3
+	addmi r2, r2, #1
+	addmi r5, r5, #1
+	bmi kopiraj_oznako
+	add r3, r3, #1
+	adr r0, tabela_oznak
+	mov r1, #39
+	strb r1, [r0, r5]
+	add r5, r5, #1
+	@naslovi, ta prvi del
+	adr r0, tabela_oznak
+	mov r1, #48
+	strb r1, [r0, r5]
+	add r5, r5, #1
+	strb r1, [r0, r5]
+	@drugi del
+	mov r1, #48
+	add r5, r5, #1
+	strb r1, [r0, r5]
+	add r1, r1, r4
+	add r5, r5, #1
+	strb r1, [r0, r5]
+	@tretji del
+	mov r1, #48
+	add r5, r5, #1
+	strb r1, [r0, r5]
+	add r5, r5, #1
+	strb r1, [r0, r5]
+	add r5, r5, #1
+	b tretja_naloga
+
+tretja_naloga:
+	adr r0, izvorna_koda
+	ldrb r1, [r0, r3]
+	cmp r1, #58
+	adreq r0, tabela_oznak
+	moveq r1, #39
+	streqb r1, [r0, r5]
+	addeq r5, r5, #1
+	beq kopiraj_oznako
+	addne r3, r3, #1
+	cmp r1, #10
+	moveq r2, r3
+	addeq r4, r4, #1
+	cmp r1, #00
+	bne tretja_naloga
+
+_end: b _end

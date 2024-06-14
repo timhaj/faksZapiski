@@ -1,0 +1,60 @@
+1. naloga
+
+.text
+.org 0x20
+stev1: .word 0
+stev2: .word 300
+stev3: .word 200
+.global _start
+_start:
+	adr r0, stev2
+	ldr r2, [r0]
+	adr r0, stev3
+	ldr r3, [r0]
+	mov r1, r2
+	cmp r2, r3
+	movlo r1, r3
+	adr r0, stev1
+	str r1, [r0]
+
+end: b end
+
+2. naloga
+
+.text
+.org 0x20
+stev1: .word 0
+stev2: .word 300
+stev3: .word 200
+.global _start
+_start:
+	adr r0, stev2
+	ldr r2, [r0]
+	adr r0, stev3
+	ldr r3, [r0]
+	mov r1, r2
+	cmp r2, r3
+	movhi r1, r3
+	adr r0, stev1
+	str r1, [r0]
+end: b end
+
+3. naloga
+
+pri 1. nalogi bo za predznacena stevila ukaz sel iz movlo v movlt, pri 2. pa iz movhi v movgt
+
+4. naloga
+
+.text
+.org 0x20
+.global _start
+_start:
+	mov r1, #105
+	mov r2, #45
+zanka:
+	cmp r1, r2
+	subgt r1, r1, r2
+	sublt r2, r2, r1
+	bne zanka
+
+end: b end

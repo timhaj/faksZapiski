@@ -1,0 +1,187 @@
+https://fri-vss.gitpage.si/zapiski-in-material/vss-1/RK/2021-22-naloge/09-LDN9/starc-aljaz.html#networking-scheme
+
+DNS1: ip addr add 192.168.1.1/24 broadcast + dev eth0
+DNS2: ip addr add 192.168.1.2/24 broadcast + dev eth0
+CLIENT1: ip addr add 192.168.1.100/24 broadcast + dev eth0
+-------------------------------------------------------------
+poglej vsebino datotek named.conf in db.* v imeniku /etc/bind
+--------------------------------------------------------------
+na DNS1:
+nano named.conf -> dodaj spodnji zapis za domeno hajdinjak.rk ALI PA upoštevaš navodilo in zapišeš v named.conf.local, torej:
+nano named.conf.local -> dodas tole:
+
+zone "hajdinjak.rk" {
+        type master;
+        file "/etc/bind/db.hajdinjak";
+};
+ na koncu zgleda tko:
+
+cat << EOF >> /etc/bind/named.conf.local
+
+zone "starc.rk" {
+    type master;
+    file "/etc/bind/db.rk.starc";
+};
+EOF
+----------------------------------------------------------------
+na DNS1:
+nano db.hajdinjak -> skopiras stvari iz lrk.local (T09.html zgoraj)
+zgledat bi rabl tako:
+
+cat << EOF > /etc/bind/db.hajdinjak
+; hajdinjak.rk
+\$TTL    604800
+hajdinjak.rk.       IN      SOA     ns1.hajdinjak.rk.   hostmaster.hajdinjak.rk.    (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+
+hajdinjak.rk.       IN      NS      ns1.hajdinjak.rk.
+ns1             IN      A       192.168.1.1
+ns2             IN      A       192.168.1.2
+www             IN      CNAME   ns1
+EOF
+----------------------------------------------------------------------------------
+na DNS1:
+named-checkzone hajdinjak.rk /etc/bind/db.hajdinjak  --> vrnt bi rabl OK
+---------------------------------------------------------------------------------
+na DNS1:
+service named restart --> vrne OK
+-------------------------------------------------------------------------------------
+na DNS1:
+dig ns1.hajdinjak.rk @localhost --> v ANSWER SECTION, more bit ns1.hajdinjak.rk enak 192.168.1.1
+-------------------------------------------------------------------------------------
+na DNS1:
+nano db.1.168.192.in-addr.arpa -> kopiras tole:
+
+cat << EOF > /etc/bind/db.1.168.192.in-addr.arpa
+; 1.168.192.in-addr.arpa
+\$TTL    604800
+1.168.192.in-addr.arpa. IN      SOA     ns1.hajdinjak.rk.   hostmaster.hajdinjak.rk.	(
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+
+1.168.192.in-addr.arpa. IN      NS      ns1.hajdinjak.rk.
+1                       IN      PTR     ns1.hajdinjak.rk.
+2                       IN      PTR     ns2.hajdinjak.rk.
+EOF
+-------------------------------------------------------------------------------------
+na DNS1 tole APPEND-AS:
+nano named.conf.local -> append na konc:
+
+zone "1.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.1.168.192.in-addr.arpa";
+};
+------------------------------------------------------------------------------------
+na DNS1:
+named-checkzone 1.168.192.in-addr.arpa /etc/bind/db.1.168.192.in-addr.arpa
+service named restart
+dig 1.1.168.192.in-addr.arpa @localhost PTR
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+na CLIENT:
+echo "nameserver 192.168.1.1" > /etc/resolv.conf
+nslookup ns1.hajdinjak.rk
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+na DNS2:
+chmod 775 /etc/bind
+-----------------------------------------------------------------------------------
+na DNS2:
+nano named.conf.local -> skopiras tole:
+
+cat << EOF >> /etc/bind/named.conf.local
+
+zone "hajdinjak.rk" {
+    type slave;  
+    file "/etc/bind/db.hajdinjak-slave";
+    masterfile-format text;
+    masters {
+        192.168.1.1;
+    };
+};
+EOF
+---------------------------------------------------------------------------------
+
+TUKAJ ZAŽENEŠ ZAJEM PROMETA NA POVEZAVI SWITCH <-> DNS2 in shranis v dat. dns-transfer.pcapng
+
+----------------------------------------------------------------------------------
+na DNS2:
+
+service named restart
+rndc refresh hajdinjak.rk
+
+//pocakas da se prenos konca in zajem prometa shranis v dat. dns-transfer.pcapng
+------------------------------------------------------------------------------------
+na DNS2:
+nano named.conf.local --> kopiras tole:
+
+cat << EOF >> /etc/bind/named.conf.local
+
+zone "1.168.192.in-addr.arpa" {
+    type slave;  
+    file "/etc/bind/db.1.168.192.in-addr.arpa-slave";
+    masterfile-format text;
+    masters {
+        192.168.1.1;
+    };
+};
+EOF
+------------------------------------------------------------------------------------------
+na DNS1:
+rndc reload
+-------------------------------------------------------------------------------------------
+na DNS2:
+service named restart
+rndc refresh 1.168.192.in-addr.arpa
+
+---------------------------------------------------------------------------------------------
+Sedaj pocakaj par sekund, saj ukaz rndc refresh doda zahtevo za prenos z queue in zato Ko je prenos izveden, v terminalu prikazemo vsebino datoteke /etc/bind/db.1.168.192.in-addr.arpa-slave ter zajamemo screenshot terminala v datoteko imenovano db.1.168.192.in-addr.arpa-slave.png
+----------------------------------------------------------------------------------------------
+
+oddamo zahtevo za refresh za cono `hajdinjak.rk` - na DNS2
+
+cat /etc/bind/db.1.168.192.in-addr.arpa-slave
+
+
+zip VPISNA.zip <seznam_datotek>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

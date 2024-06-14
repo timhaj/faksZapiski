@@ -1,0 +1,131 @@
+1. naloga:
+
+.text
+.org 0x20
+stev1: .word 0
+stev2: .word 100
+stev3: .word 200
+.global _start
+_start:
+	adr r0, stev2
+	ldr r2, [r0]
+	adr r0, stev3
+	ldr r3, [r0]
+	
+	mov r1, r2
+	cmp r2, r3
+	bhi dalje
+	mov r1, r3
+
+dalje:
+	adr r0, stev1
+	str r1, [r0]
+
+end: b end
+
+2. naloga:
+
+.text
+.org 0x20
+stev1: .word 0
+stev2: .word 100
+stev3: .word 200
+.global _start
+_start:
+	adr r0, stev2
+	ldr r2, [r0]
+	adr r0, stev3
+	ldr r3, [r0]
+	
+	mov r1, r2
+	cmp r2, r3
+	blo dalje
+	mov r1, r3
+
+dalje:
+	adr r0, stev1
+	str r1, [r0]
+
+end: b end
+
+3. naloga:
+
+vecje:
+
+.text
+.org 0x20
+stev1: .word 0
+stev2: .word 1
+stev3: .word -1
+.global _start
+_start:
+	adr r0, stev2
+	ldr r2, [r0]
+	adr r0, stev3
+	ldr r3, [r0]
+	
+	mov r1, r2
+	cmp r2, r3
+	bgt dalje
+	mov r1, r3
+
+dalje:
+	adr r0, stev1
+	str r1, [r0]
+
+end: b end
+
+------------------------------------------
+manjse:
+
+.text
+.org 0x20
+stev1: .word 0
+stev2: .word 1
+stev3: .word -1
+.global _start
+_start:
+	adr r0, stev2
+	ldr r2, [r0]
+	adr r0, stev3
+	ldr r3, [r0]
+	
+	mov r1, r2
+	cmp r2, r3
+	blt dalje
+	mov r1, r3
+
+dalje:
+	adr r0, stev1
+	str r1, [r0]
+
+end: b end
+
+4. naloga:
+
+.text
+.org 0x20
+stev1: .word 105
+stev2: .word 45
+.global _start
+_start:
+
+	adr r0, stev1
+	ldr r1, [r0]
+	adr r0, stev2
+	ldr r2, [r0]
+
+zanka:
+	cmp r1, r2
+	blo l1
+	beq l2
+	sub r1, r1, r2
+	b zanka
+
+l1: 
+	sub r2, r2, r1
+	b zanka
+
+l2:
+	@ konec pocil je lonec
+end: b end

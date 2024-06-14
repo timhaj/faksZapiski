@@ -1,0 +1,121 @@
+1. naloga:
+
+.text
+.org 0x20
+@spremenljivke
+
+stev1: .word 42
+stev2: .word 69
+
+.align
+.global _start
+_start:
+@program
+	adr r0, stev1
+	ldr r1, [r0]
+	
+	adr r0, stev2
+	ldr r2, [r0]
+	str r1, [r0]
+	adr r0, stev1
+	str r2, [r0]
+end: b end	
+
+
+2. naloga:
+
+.text
+.org 0x20
+@spremenljivke
+
+TABELA: .space 5
+vrednost: .byte 0xFF
+
+.align
+.global _start
+_start:
+@program
+
+adr r0, vrednost
+ldrb r1, vrednost
+@ mov r1, #0xFF   (in ne rabis zgornjih dveh vrstic kode)
+
+adr r0, TABELA
+strb r1, [r0]
+strb r1, [r0, #1]
+strb r1, [r0, #2]
+strb r1, [r0, #3]
+strb r1, [r0, #4]
+
+end: b end		
+
+
+3. naloga:
+
+.text
+.org 0x20
+@spremenljivke
+
+	TABELA: .space 6
+
+.align
+.global _start
+_start:
+@program
+
+	adr r0, TABELA
+	mov r1, #1
+	strb r1, [r0]
+	mov r1, #2
+	strb r1, [r0, #1]
+	mov r1, #3
+	strb r1, [r0, #2]
+	mov r1, #4
+	strb r1, [r0, #3]
+	mov r1, #5
+	strb r1, [r0, #4]
+	mov r1, #6
+	strb r1, [r0, #5]	
+@ zamenjaj 1 in 6:
+	ldrb r1, [r0]
+	ldrb r2, [r0, #5]
+	strb r1, [r0, #5]
+	strb r2, [r0]	
+@ zamenjaj 2 in 5:
+	ldrb r1, [r0, #1]
+	ldrb r2, [r0, #4]
+	strb r1, [r0, #4]
+	strb r2, [r0, #1]	
+@ zamenjaj 3 in 4:
+	ldrb r1, [r0, #2]
+	ldrb r2, [r0, #3]
+	strb r1, [r0, #3]
+	strb r2, [r0, #2]		
+
+end: b end	
+
+4. naloga:
+
+.text
+.org 0x20
+@spremenljivke
+	stev1: .word 0x12345678
+	stev2: .word 0
+.align
+.global _start
+_start:
+@program
+	adr r0, stev1
+	adr r1, stev2
+	ldrb r2, [r0]
+	strb r2, [r1, #3]
+	
+	ldrb r2, [r0, #1]
+	strb r2, [r1, #2]
+	
+	ldrb r2, [r0, #2]
+	strb r2, [r1, #1]
+	
+	ldrb r2, [r0, #3]
+	strb r2, [r1]
+end: b end	

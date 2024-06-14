@@ -1,0 +1,75 @@
+1. naloga
+
+mov r1, #128 @ se prevede v 0xe3a01080
+
+pred izvedbo:
+	r1: 0 oziroma (?) -> v primeru če prejšnji program ni pobrisal registre
+	r15 (pc): 0x20
+
+po izvedbi:
+	r1: 0x80 oz. 128
+	r15 (pc): 0x24
+
+2. naloga
+
+.text
+.org 0x20
+@spremenljivke
+	STEV1: .word 0x12345678
+	STEV2: .byte 128
+	.even @ preskočimo na naslednji sodi naslov (deluje enako kot .align)
+	STEV3: .hword 0xF123
+.align
+.global _start
+_start:
+@program
+	adr r0, STEV1
+	ldr r1, [r0]
+	
+	adr r0, STEV2
+	ldr r1, [r0]
+
+	adr r0, STEV3
+	ldr r1, [r0]
+end: b end
+
+3. naloga
+
+.text
+.org 0x20
+@spremenljivke
+
+@32-bit
+@	STEV1: .word 0x12345678
+@	STEV2: .word 0x87654321
+
+@16-bit
+@	STEV1: .hword 0x1234
+@	STEV2: .hword 0x8765
+
+@8-bit
+	STEV1: .byte 0x12
+	STEV2: .byte 0x87
+.align
+.global _start
+_start:
+@program
+
+@32-bit
+@	adr r0, STEV1
+@	ldr r1, [r0]
+@	adr r0, STEV2
+@	str r1, [r0]
+
+@16-bit
+@	adr r0, STEV1
+@	ldrh r1, [r0]
+@	adr r0, STEV2
+@	strh r1, [r0]
+
+@8-bit
+	adr r0, STEV1
+	ldrb r1, [r0]
+	adr r0, STEV2
+	strb r1, [r0]
+end: b end	

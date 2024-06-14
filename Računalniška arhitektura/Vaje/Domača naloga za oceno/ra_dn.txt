@@ -1,0 +1,33 @@
+.text
+.org 0x20
+izvorna_koda: .asciz "
+\n\n
+stev1: .var 0xf123
+@ komentar 1\n @prazna vrstica \n stev2: .var 15
+\nstev3: .var 128\n_start:\n mov r1, #5 @v r1 premakni 5\nmov r2, #1\nukaz3: add r1, #1\nb _start"
+izvorna_koda_pocisceno: .space 120
+tabela_oznak: .space 100
+.align
+.global _start
+_start:
+	mov r3, #0 			@za izvorna_koda stevec
+	mov r2, #0 			@za izvorna_koda_pocisceno stevec (ce to koncno vrednost odstejes od r3, ti stevilka pove koliko znakov si pobrisal)
+	mov r4, #0 			@sluzi kot flag
+	
+beri_brez_komentarjev:
+	adr r0, izvorna_koda 				@naslov primarnega teksta
+	ldrb r1, [r0, r3] 					@nalozimo naslednji bajt (r3 se z vsako iteracijo zanke povecuje)
+	adr r0, izvorna_koda_pocisceno 		@naslov prepisanega teksta
+	cmp r1, #64 						@r1 enak afni
+	moveq r4, #1 						@r4 na 1 ce r1 enak afni
+	cmp r4, #1 							@ce je r4 flag "on"
+	cmpeq r1, #'\n' 					@ce je r4 flag "on" in r1 enak \n
+	moveq r4, #0 						@r4 flag damo na 0, ker je konec comment-a
+	cmp r4, #1 							@ce je r4 se vedno 1, pomeni da smo se zmeraj v comment-u
+	strneb r1, [r0, r2] 				@prepisemo bajt, ce ni v comment-u
+	addne r2, r2, #1 					@povecamo stevec, ce nismo v comment-u
+	add r3, r3, #1 						@stevec primarnega teksta vedno povecujemo
+	cmp r1, #00 						@glavna pogoj za zanko, gledamo ce je bajt v primarnem tekstu razlicen od NULL terminatorja
+	bne beri_brez_komentarjev
+	
+_end: b _end

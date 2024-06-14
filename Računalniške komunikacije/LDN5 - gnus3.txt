@@ -1,0 +1,83 @@
+10.1.0.0/??
+10.0.0.0/??
+192.168.9.0/??
+172.16.9.0/??
+2001:db8:e:1::/??
+2001:db8:0:f::/??
+2001:db8:ef:9::/??
+2001:db8:9:ef::/??
+--------------------------
+Alpine1.eth0 <> VyOS1.eth0
+VyOS1.eth1 <> VyOS2.eth1
+VyOS2.eth2 <> VyOS3.eth2
+VyOS3.eth0 <> Alpine2.eth0
+Alpine1.eth0 <> VyOS1.eth0
+VyOS1.eth1 <> VyOS2.eth1
+VyOS2.eth2 <> VyOS3.eth2
+VyOS3.eth0 <> Alpine2.eth0
+----------------------------------------------
+alpine 1:
+
+ip addr add 10.1.0.1/30 broadcast + dev eth0
+ip route add default via 10.1.0.2 dev eth0
+
+ip -6 addr add 2001:db8:e:1::1/64 dev eth0
+ip -6 route add ::/0 via 2001:db8:e:1::2
+
+ip r
+ip -6 r
+
+_________________________________________________
+alpine 2:
+
+ip addr add 172.16.9.1/30 broadcast + dev eth0
+ip route add default via 172.16.9.2 dev eth0
+
+ip -6 addr add 2001:db8:9:ef::1/64 dev eth0
+ip -6 route add ::/0 via 2001:db8:9:ef::2
+
+ip r
+ip -6 r
+
+-------------------------------------------------
+_________________________________________________
+vyos2
+ip addr add 10.0.0.1/30 broadcast + dev eth1 # conn. to VyOS-1
+ip addr add 192.168.9.1/30 broadcast + dev eth2 # conn. to VyOS-3
+
+ip route add 10.1.0.0/30 via 10.0.0.2 dev eth1 # route na subnet med Alpine-1 ter VyOS-1
+ip route add 172.16.9.0/30 via 192.168.9.2 dev eth2 # route na subnet med Alpine-2 ter VyOS-3
+
+
+ip -6 addr add 2001:db8:0:f::1/64 dev eth1 # conn. to VyOS-1
+ip -6 addr add 2001:db8:ef:9::1/64 dev eth2 # conn. to VyOS-3
+
+ip -6 route add 2001:db8:e:1::/64 via 2001:db8:0:f::2 # route na subnet med Alpine-1 ter VyOS-1
+ip -6 route add 2001:db8:9:ef::/64 via 2001:db8:ef:9::2 # route na subnet med Alpine-2 ter VyOS-3
+
+ip r
+ip -6 r
+_________________________________________________
+vyos1
+ip addr add 10.1.0.2/30 broadcast + dev eth0 # conn. to Alpine-1
+ip addr add 10.0.0.2/30 broadcast + dev eth1 # conn. to VyOS-2
+ip route add default via 10.0.0.1 dev eth1 # default route na VyOS-2
+
+ip -6 addr add 2001:db8:e:1::2/64 dev eth0 # conn. to Alpine-1
+ip -6 addr add 2001:db8:0:f::2/64 dev eth1 # conn. to VyOS-2
+ip -6 route add ::/0 via 2001:db8:0:f::1 # default route na VyOS-2
+
+ip r
+ip -6 r
+_________________________________________________
+vyos 3
+ip addr add 172.16.9.2/30 broadcast + dev eth0 # conn. to Alpine-2
+ip addr add 192.168.9.2/30 broadcast + dev eth2 # conn. to VyOS-2
+ip route add default via 192.168.9.1 dev eth2 # default route na VyOS-2
+
+ip -6 addr add 2001:db8:9:ef::2/64 dev eth0 # conn. to Alpine-2
+ip -6 addr add 2001:db8:ef:9::2/64 dev eth2 # conn. to VyOS-2
+ip -6 route add ::/0 via 2001:db8:ef:9::1 # default route na VyOS-2
+
+ip r
+ip -6 r

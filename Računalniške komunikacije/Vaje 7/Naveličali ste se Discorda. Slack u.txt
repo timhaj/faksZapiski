@@ -1,0 +1,19 @@
+Naveličali ste se Discorda. Slack uporabljajo samo še dinozavri. Čas je za lastno rešitev! 
+Dopolnite priloženo izvedbo pogovrnega strežnika, ki pošillja le enostavna tekstovna sporočila. Dopolnite oba programa (pogovorni strežnik in odjemalec) tako, da bosta sposobna pošiljati in sprejemati strukturirane podatke, za kar lahko uporabite format XML, JSON ali kaj svojega.
+
+chatServer.py
+chatClient.py
+- Zahteve
+Pogovorni strežnik
+	Strežnik mora biti večniten (že narejeno)														DONE
+	Strežnik mora podpirati hkratno komunikacijo z več odjemalci (že narejeno)										DONE	
+	Vsako javno sporočilo, ki pride do strežnika, se razpošlje vsem odjemalcem (že narejeno)								DONE
+	Privatna sporočila se pošljejo le naslovniku														DONE
+	V kolikor naslovnik ni prijavljen v pogovorni strežnik, naj se pošiljatelju pošlje sporočilo o napaki							DONE
+	Vsako sporočilo, ki ga strežnik pošilja odjemalcu, mora biti opremljeno z imenom originalnega pošiljatelja						DONE
+Odjemalec
+	Študent se mora v odjemalca prijaviti s svojim imenom													DONE
+	Program se poveže na pogovorni strežnik in pošilja nanj vsa sporočila, ki jih študent vtipka preko standardnega vhoda STDIN (že narejeno)		DONE
+	Vsako sporočilo, ki ga študent pošlje na strežnik, mora biti opremljeno z njegovim imenom in časom pošiljanja
+- Oddaja naloge
+Oddati morate ZIP (ne uporabljajte drugih kompresij!) datoteko, ki vsebuje vašo implementacijo pogovornega strežnika in odjemalca.

@@ -1,0 +1,121 @@
+1. naloga:
+
+.text
+.org 0x20
+@spremenljivke
+stevilo_ponovitev_notranje: .word 48000
+.align
+.global _start
+_start:
+@program
+	adr r0, stevilo_ponovitev_notranje
+	mov r1, #0
+	mov r2, #500
+ZUNANJA_ZANKA:
+	ldr r3, [r0]
+NOTRANJA_ZANKA:
+		add r1, r1, #1
+		subs r3, r3, #1
+		bne NOTRANJA_ZANKA
+	subs r2, r2, #1
+	bne ZUNANJA_ZANKA
+end: b end	
+
+2. naloga
+
+.text
+.org 0x20
+@spremenljivke
+tabela: .space 8
+.align
+.global _start
+_start:
+@program
+	adr r0, tabela
+	mov r1, #8
+	mov r2, #0xFF
+zanka:
+	strb r2, [r0]
+	add r0, r0, #1
+	subs r1, r1, #1
+	bne zanka
+end: b end	
+
+3. naloga
+
+.text
+.org 0x20
+@spremenljivke
+tabela: .byte 192,155,224,48,0,128,99,147,177,100
+rezultat: .hword 0
+.align
+.global _start
+_start:
+@program
+	adr r0, tabela
+	mov r1, #10
+	mov r2, #0
+	mov r3, #0
+zanka:
+	ldrsb r4, [r0]
+	cmp r4, #100
+	addgt r2, r2, #1
+	add r3, r3, r4
+	add r0, r0, #1
+	subs r1, r1, #1
+	bne zanka
+
+mov r1, r2
+adr r0, rezultat
+strh r3, [r0]
+
+end: b end
+
+
+b) tabela bo .hword, rezultat pa .word    ;     ldrsb se spremeni v ldrsh, bazni register se povečuje za 2, strh se spremeni v str
+
+4. naloga
+
+.text
+.org 0x20
+@spremenljivke
+niz: .asciz "Zunaj je mraz, sneg in poledica."
+.align
+.global _start
+_start:
+@program
+	adr r0, niz
+	mov r1, #0
+	mov r2, #0x20
+zanka:
+	ldrb r3, [r0]
+	cmp r3, #0
+	beq konec
+	cmp r3, r2
+	addeq r1, r1, #1
+	add r0, r0, #1
+	b zanka
+konec:
+end: b end	
+
+5. naloga
+
+.text
+.org 0x20
+TABELA: .hword 1,100,-255,24,-88,31,56,192,155,-224,0,101,-199,47
+.align
+.global _start
+_start:     
+	mov r1, #14 	
+	adr r0, TABELA 	
+	mov r3, #0 
+zanka:     
+	ldrsh r2, [r0] 	
+	cmp r2, #100 	
+	strgth r3, [r0] 	
+	cmplt r2, #-100 	
+	strlth r3, [r0] 	
+	add r0, r0, #2     
+	subs r1, r1, #1 	
+	bne zanka 
+end: b end

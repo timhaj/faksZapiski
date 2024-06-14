@@ -1,0 +1,64 @@
+1. naloga
+
+.text
+.org 0x20
+STEV1: .space 4
+STEV2: .word 0x7fffffff
+STEV3: .word 0x80000001
+.align
+.global _start
+_start:
+
+	adr r0, STEV2
+	ldr r1, [r0]
+
+	adr r0, STEV3
+	ldr r2, [r0]
+
+	adds r1, r1, r2
+	
+	adr r0, STEV1
+	str r1, [r0]
+end: b end
+
+Končna vrednost STEV1: 0x00000000
+Stanje zastavic: Z=1, N=0, C=1 (prišlo je do prenosa), V=0
+
+2. naloga
+
+.text
+.org 0x20
+STEV2: .word 0
+STEV3: .word 0xffffffff
+.align
+.global _start
+_start:
+
+	adr r0, STEV2
+	ldr r1, [r0]
+
+	adr r0, STEV3
+	ldr r2, [r0]
+
+	adds r1, r1, r2
+	
+	adr r0, STEV2
+	str r1, [r0]
+end: b end
+
+Končna vrednost STEV2: 0xffffffff
+Stanje zastavic: Z=0, N=1 (ker je MSB bit na 1), C=0, V=0
+
+3. naloga
+Izvršili se bodo naslednji pogojni skoki:
+BCC (zaradi C)
+BNE (zaradi Z)
+BLS (zaradi C)
+BMI (zaradi N)
+BLT (zaradi N in V)
+
+4. naloga
+a) DA, ker (r1=127) ni enako 0 (je BNE)
+b) NE, ker (r1=127) ni enak 0 (ni BEQ)
+c) DA, ker (r1=0) je enako 0 (je BEQ)
+d) DA, ker (1 - 25) < 0 (je BMI)
