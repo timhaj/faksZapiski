@@ -1,0 +1,6 @@
+Rešitve za naloge:
+
+Resitev.py - V conString podajte svoje podatke (DSN) za povezavo
+resitevOptimal.xlsx - Delovalo bo le, če imate nastavljen DSN z imenom Doma na lokalno bazo za uporabinka pb in geslom pbvaje.
+jadralciPopravljeno.sql - popravljena skripta za sqlite. Popravljeni so DROP stavki in datumi.
+izpis.py - program, ki izpiše pet plač izbranih šifer

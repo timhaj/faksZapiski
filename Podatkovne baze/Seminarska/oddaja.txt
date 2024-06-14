@@ -1,0 +1,9 @@
+Rešite naloge in oddajte naslednje datoteke:
+- Poročilo v pdf obliki
+	Poročilo naj vsebuje vaše podatke (ime, priimek, vpisna številka), besedila nalog, rešitve (SQL koda), rezultate poizvedb (5-10 vrstic odgovora - lahko pripenjate slike iz MySQL Workbencha) in vaše morebitne komentarje rešitve.
+- Rešitve nalog v .txt datoteki
+	.txt datoteka se bo uporabljala, da lahko lokalno še enkrat poženemo vaše rezultate in da preverimo podobnost oddanih datotek. Moodle ima težavo s sprejemanje .sql datotek, zato odajate v .txt.
+- Python izvorno kodo
+	Priložite izvorno kodo vašega programa v poročilo pa ne lepite celotne izvorne kode. V poročilu lahko svojo izvedbo opištete s pomočjo psevdokode in prilepite posnetek zaslona grafa vašega programa.
+- Excel ali LibreOffice Calc razpredelnico
+	Opcijsko, če ste se odločili za reševanje tega dela.

@@ -1,0 +1,20 @@
+seminarska OVS
+Naziv
+mozgani.csv
+
+Opis
+Meritve telesne teˇze in teˇze moˇzganov na vzorcu 58 vrst sesalcev.
+
+Format
+Baza podatkov s 58 vrednostmi 4 spremenljivk
+ vrsta je nominalna spremenljivka, katere vrednosti so latinski nazivi vrste sesalcev.
+ slovime je nominalna spremenljivka, katere vrednosti so slovenski nazivi vrste sesalcev.
+ telteza je numeriˇcna zvezna spremenljivka, ki predstavlja telesno teˇzo (v kilogramih).
+ mozteza je numeriˇcna zvezna spremenljivka, ki predstavlja teˇzo moˇzganov (v gramih).
+
+Raziskovalna domneva
+Med teˇzo moˇzganov in telesno teˇzo sesalcev obstaja funkcijska zveza.
+
+Opomba
+Konstruirati linearni regresijski model med transformiranima spremenljivkama log (mozteza)
+in log (telteza), kjer je log (mozteza) odvisna spremenljivka.

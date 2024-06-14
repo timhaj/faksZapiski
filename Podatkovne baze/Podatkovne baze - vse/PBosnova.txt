@@ -1,0 +1,11 @@
+select 1; -- izpiše 1
+select abc; -- izpiše napako, ker ne pozna tega polja
+select "abc"; -- deluje, izpiše abc
+select "abc",'def' from coln; -- če želimo niz, potem so obvezni enojni ali dvojni narekovaji
+select 1 as polje; -- preimenuje atribut/kolono v "polje"
+select 1 as polje from coln; -- enako, le da izpiše tolikokrat kot je zapisov v tabeli coln
+select sin(90); -- izpiše 0.8939966636005579, lahko damo poljuben aritmetični izraz
+select 1 from coln; -- izpiše 1 tolikokrat, kolikor je vrstic v čolnih
+select n from coln; -- enako kot select 1, če je n neko število
+-- enako deluje če damo več argumentov 1,2,3
+

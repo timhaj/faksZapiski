@@ -1,0 +1,33 @@
+Takeaways:
+
+igralec je lahko:
+- Rimljani
+- Galci
+- Tevtoni
+poleg teh je še Natarji in ostali sovražni
+
+koordinate so med (-400, -400) in (400, 400) -> kaj je fora da dajo (), ce je []?
+
+aliansa -> klan
+
+Reševanje nalog in poročilo:
+Vse opravljeno delo dokumentirajte v obliki poročila, ki vsebuje tekst naloge, rešitev (SQL ali
+Python koda), prikaz rezultatov in vaše morebitne komentarje. Poročilo oddajte primerno
+oblikovano v PDF obliki. Programsko kodo in rezultate poizvedb vključite v tekst na primeren
+način (kodo kot ustrezno oblikovan tekst, črno na belem, rezultate kot tabele, recimo kot iz
+Excela). Uporaba zaslonskih slik ni dovoljena. Neustrezno oblikovana poročila bodo nižje
+ocenjena.
+V tekstu so z zvezdicami (*) označene nekoliko zahtevnejše naloge.
+
+Pomen atributov tabele x_world je naslednji:
+1. id - Šifra polja
+2. x - X koordinata (-400, 400)
+3. y - Y koordinata (-400, 400)
+4. tid - Šifra plemena: 1 = Rimljani, 2 = Tevtoni, 3 = Galci, 4 = Narava, 5 = Natarji
+5. vid - Šifra naselja
+6. village - Ime naselja
+7. pid - Šifra igralca
+8. player - Ime igralca
+9. aid - Šifra alianse (0 pomeni da igralec ni v aliansi) ----------------------------------------> za eno nalogo
+10. alliance - Ime alianse
+11. population - Število prebivalcev naselja.
