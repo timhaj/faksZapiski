@@ -1,0 +1,91 @@
+----------------------------------------------------
+ARP pa te pičkarije 1:
+Če pride do zapisa na stikalu, pišeš: št_vmesnika-ime_naprave (npr. 1-A)
+Če stikalo ne ve destination, se odda broadcast (princip ARP), vse naprave slišijo; če se kej pošlje čez drugo stikalo, si to stikalo zapomni source, torej št_vmesnika-source.
+Če stikalo ve destination, se odda unicast na destination
+
+ARP poizvedba -> slišijo vse naprave razen tiste k to zahteva
+-----------------------------------------------------
+NAT usmerjevalnik
+- če obstaja kakšen zapis v NAT tabeli, v stolpec POTEM to zapišeš preoblikovan IP naslov + PORT
+- če pa kaj ne obstaja pa pustiš tako kot je
+- če source pošlje paket na destination, ki je privatni IP naslov, ga zavržemo (NAT sprejema samo destination-e ki so javni, preko NAT tabele te javne naslove preslika v zasebne (security))
+- do zapisa v NAT tabelo pride, ko je source zasebni IP naslov, ta IP naslov se preslika na vmesnik NAT usmerjevalnika, ki je povezan na internet (PRI TEM PAZI DA SPREMENIS PORT NUMBER NA NEKI XYZ, ker preko tega diferentiate-as druge zasebne IP naslove k nekdo ping-a vmesnik NAT-a)
+- datagram zavrže tudi v primeru, če ni zapisa v NAT tabeli
+- port ne sme bit <= 1024
+---------------------------------------------------------
+ MTU pa ta jajca
+- glava je vedno 20 B, v čist čist prvem koraku je glava ze vsteta v skupaj (ce ni ekspliticno podan, sam da ves)
+- št. fragmentov vedno od 1 naprej, v prvem koraku je glava itak 20, telo pa kokr naprava pošlje - 20, skupaj pa tok kokr naprava pošlje
+- v drugem koraku, če se kej fragmentira, pišeš pod št.fragmentov najprej 1, nato pa 2, 1 bo skupaj itak tok kokr lahko U1 pošlje max, glava 20, telo UI max - 20 (ko to nardiš, poglej če je telo deljivo z 8, če ni, zmanjšaš telo dokler ni deljivo z 8, nato popraviš skupaj, glava je ista). Pod 2 pa bo skupaj tok kokr je A poslal U1 - kokr je 1 poslal (skupaj), glava 2x 20, telo sam odštejes 40 od skupaj.
+- ubistvu pod glava sam 20 pišeš, skupaj seštejes glava + telo, pr fragmentih sam odštevi telesa med sabo (odštevaš tiste fragmente k majo isto cifro oz. logično vids kerga) pa pazi da k fragmentiras, da je ne-zadnji fragment deljiv z 8
+- ko prides na U2, ne pozabit fragmentirat 1ke :)
+----------------------------------------------------------
+ARP pa te pičkarije 2:
+- če usmerjevalnik povezuje dva stikala in eno napravo, in na enem stikalu se odda broadcast, sliši tisto omrežje k je stikalo + tista naprava k je privezana na usmerjevalnik (np for info)
+- če ta naprava k je privezana na usmerjevalnik da ARP request (MAC naslov requesta-a je ff:ff:ff:ff:ff), usmerjevalnik ne pošlje nikamor ker gre za lokalno omrežje, oziroma ARP request bo slišal samo usmerjevalnik U ampak ne bo nikamor poslal
+- kaj se more vedet če hoče ena naprava iz enega stikala poslat paket na drugo stikalo, da ne bo prišlo do ARP request-a? source naprava rabi vedet mac naslov usmerjevalnika (arp tabele vsebujejo mac naslove), usmerjevalnik pa IP naslov destination-a (in kater vmesnik je to)
+---------------------------------------------------------------------------------
+RTT TCP ocena:
+- mas naslednje enacbe: (alpha je 0.125, beta je 0.25)
+ocenjeniRTT[i] = (1-alpha)*ocenjeniRTT[i-1] + alpha*izmerjeniRTT[i] //trenutna ocena
+devRTT[i] = (1-beta)*devRTT[i-1] + beta * | izmerjeniRTT[i] - ocenjeniRTT[i] | //ocena odmika
+čakalni_intervali[i] = ocenjeniRTT[i] + 4*devRTT[i]
+// izmerjeniRTT[i] je kdaj pride naslednja potrditev od oddaje ustreznega segmenta
+
+- v navodilih pise vse pod TRENUTNO, torej [i], v naslednjih korakih gledas NASLEDNJE, torej se zmeraj [i] ampak prejsni [i] je zdej [i-1]
+- ko kej zracunas, zaokraz na najblizji integer
+- NOVI POVPREČNI ODMIK -> sesteješ vse znane odmike (tisti iz navodila iz izracunan) in delis z n.
+-----------------------------------------------------------------------------------
+rušenje TCP povezave:
+- potek: A -> FIN -> B, B -> ACK -> A, B -> FIN -> A, A -> ACK -> B
+- torej bojo bli 4 paketi, isces 4 pakete v wiresharku, ki nastopajo v tej rusitvi povezave
+- zacetek najdes tako da najdes prvi paket z FIN zastavico (prav tako tisti paket k ima 2. FIN zastavico). Prvi ACK zastavica bo nastopila v rušitvi, če bo ACK vrednost enaka SEQ vrednost + 1 iz prve FIN zastavice ter drugi ACK če bo ACK vrednost enaka SEQ + 1 vrednosti iz druge FIN zastavice. 
+- koliko koristnih podatkov se prenese? LENGTH - 66B. V prvih treh paketih (ki nastopajo kot vzpostavitev povezave, je nič koristnih podatkov). Tale LENGTH - 66B se zracuna tudi preko SEQ vrednosti, tako da iz naslednjega ACK paketa odstejes SEQ - 1. 
+-----------------------------------------------------------------------------
+FTP ima lahko active pa passive način, razlika: pri active klient odpre kontrolno povezavo od serverja in server podatkovno povezavo do klienta, pri passive klient odpre obe povezavi.
+-----------------------------------------------------------------------------
+Usmerjevalnik in njegova usmerjevalna tabela:
+- 0.0.0.0/0 je default gateway, ce ni taprave vrednosti v tabeli, se poslje paket tja
+-----------------------------------------------------------------------------
+http zahteva -> TCP/IP -> stikalo -> usmerjevalnik -> prehod čez NAT -> internet
+DNS poizvedba -> enkapsulacija -> arp poizvedba -> poplavlanje -> dekapsulacija -> zamenjava izvornega IP naslova -> enkapsulacija -> posredovanje -> dekapsulacija -> zamenjava izvornega IP naslova -> enkapsulacija -> posredovanje
+
+- arp tabela ima lahko ARP poizvedba in poplavljanje RAČUNALNIK IN USMERJEVALNIK (3. plast), ima ip naslove in mac naslove
+- cam tabela ima lahko poplavljanje STIKALO (2. plast), ima mac naslove in port-e
+- usmerjevalna tabela ima lahko posredovanje RAČUNALNIK IN USMERJEVALNIK (3. plast), ima naslove omrežij in naslove vmesnikov, preko katerih posreduje pakete
+--------------------------------------------------------------------------------
+CA - certificate authority je entiteta, ki izdaja digitalne certifikate. Preko tega se klienti authenticirajo in vedo s kom govorijo (zaupanje, varnost). 
+--------------------------------------------------------------------------------
+replay attack -> med komunikacijo med streznikom in klientom je en poslusalec (heker), ko klient poslje neke sensitive podatke (gesla,...), to heker ponovno poslje strezniku in tako je prijavljen v njihov sistem kot klient. Rešitev je uporaba one-time token-ov (Google authenticator, SMS,...).  
+--------------------------------------------------------------------------------
+IPv6 nima broadcast, ima pa zato multicast (zacne z FF02, lahko tudi FF05), naslovimo lahko (2^64 - naslovi rezervirani za multicast) naprav. 
+--------------------------------------------------------------------------------
+skupno in crossbar vodilo (v usmerjevalnikih)
+- skupno vodilo: v usmerjevalniku je eno vodilo (samo en paket lahko procesira naenkrat)
+- crossbar (mreža): tok kokr ma vmesnikov, tok vodoravnih in navpičnih črt ima
+- če imas 2 datagrama, npr. 1-2 in 2-3 (S-D sistem), narišeš pot teh dveh datagramov po mreži, če je kakšna skupna točka, se NE more prenašat hkrati
+----------------------------------------------------------------------------------
+DNS in predpomnjenje zapisov
+- iterativna poizvedba: to kar DNS streznik zahteva od drugih (ko ti posles rekurzivno poizvedbo, npr. www.facebook.com, poslje DNS najprej zahtevo na TLD streznik .com zahtevo, dobi IP za .com streznik, na ta streznik poslje zahtevo facebook.com, dobi IP za ta streznik kjer se nahaja, poslje potem na ta streznik se www.facebook.com zahtevo in kar dobi od IP, poslje uporabniku. )
+- rekurzivna poizvedba: poizvedba ki jo posles DNS strezniku. Torej tok kokr poizvedb klient izvede, toliko rekurzivnih bo.
+- število iterativnih pa je pogledas v vsako rekurzivno kok členov ma -> pop.mail.yahoo.com ima 4 -> pop.mail.yahoo.com, mail.yahoo.com, yahoo.com in .com. Pri tem pazi da lahko DNS si zapomne kksne IP-je, torej ce bo pop.mail.yahoo.com iscemo smtp.mail.yahoo.com, dobis sam en clen, to je smtp.mail.yahoo.com (ker mail.yahoo.com in ostali ze obstajajo)
+- najprej se gre .com, nato .yahoo.com, ne pa najprej yahoo nato pa .com
+-----------------------------------------------------------------------------------
+Kriptosistem:
+- najprej dobis P0, npr: 
+(0 1 2 3 4 5 6 7) -> indeksi/izhod
+(6 1 0 4 7 2 3 5) -> permutacije/vhod
+- povezes 6-ti vhod na 0-ti izhod, itd
+- ce imas niz 0111 1101, se na 6ti vhod poslje 0, na 1vi 1,... in preneses te nicle/enke na izhod. Tam se loci niz na S0 in S2 (ki sta sestavljena iz 4v16, P in 16v4), ce v S0 npr. dobis 0101, pogledas v tabelo kero cifro dobis (npr. 9) -> pogledas na katerem indeksu v S0 permutacijski tabeli se nahaja 9ka, to cifro das v 16v4 tabelo in dobis kriptiran niz ven. Enako nardis za S1 in niz zdruzis skupaj.
+-------------------------------------------------------------------------------------
+rwnd in cwnd
+- faza počasnega začetka: če niso šli cez prag, podvojis vrednost na vsako casovno enoto. Ko gres cez prag/si na pragu, povecujes za 1. Če v eni casovni enoti mora cwnd odreagirati na 3 kopije potrditve istega paketa, je cwnd = cwnd/2 + 3 (in prag se prepolovi -> prag = prag/2), v enem drugem primeru pa 1, drugače povečuješ normalno za 1. 
+- rnwd -> koliko bajtov lahko prejemnik prejme
+- cwnd -> koliko bajtov lahko omrežje sprejme
+- torej, v eni casovni enoti lahko posljemo: min(rwnd, cwnd), to nardis za vsako casovno enoto posebej in sestejes
+-----------------------------------------------------------------------------------------
+TCP -> kolikor klientov, toliko vtičev, če isti klient pošlje več datagramov, gledaš št. vrat cilja, vsak unique se poveča za + 1. 
+UDP -> število unique št. vrat cilja
+
+
