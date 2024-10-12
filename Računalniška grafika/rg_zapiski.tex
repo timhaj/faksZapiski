@@ -10,6 +10,7 @@
 
 % Useful packages
 \usepackage{amsmath}
+\usepackage{float}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
@@ -26,7 +27,15 @@ Osnovni pojmi, brez katerih žal ne gre
 \begin{itemize}
 \item stolpčna matrika: $\begin{bmatrix} 2,9 \\ -4,6 \\ 0 \end{bmatrix}$
 \item vrstična matrika:  $\begin{bmatrix} 12,5 & -9,32 & 0 \end{bmatrix}$
-\item transponiranje: $\begin{bmatrix} 1,3 & -4,1 & 0,0 \end{bmatrix}^T = \begin{bmatrix} 1,3 \\ -4,1 \\ 0,0 \end{bmatrix}$
+\item transponiranje: pomeni zamenjavo osi dveh matrik: $\begin{bmatrix} 1,3 & -4,1 & 0,0 \end{bmatrix}^T = \begin{bmatrix} 1,3 \\ -4,1 \\ 0,0 \end{bmatrix}$
+\item enakost matrik: dve matriki sta si enaki, če imata enako število elementov po obeh oseh, in so vsi elementi na enakih mestih
+\item vektor: predstavljen kot matrika, pomeni premik iz točke v točko in vektorji nimajo lokacije
+\item seštevanje matrik: $a + b = c \iff c_i = a_i + b_i$, intuitivno: 
+\begin{figure}[H]
+\centering
+\includegraphics[width=25mm]{sestevanje_vektorjev.png}
+\caption{Geometrijsko sestevanje vektorjev.}
+\end{figure}
 \end{itemize}
 
 \section{Some examples to get started}
