@@ -167,50 +167,62 @@ Lastnosti transponiranja:
 
 \section{Transformacije in homogene koordinate}
 
-\section{Some examples to get started}
-
-\subsection{How to create Sections and Subsections}
-
-Simply use the section and subsection commands, as in this example document! With Overleaf, all the formatting and numbering is handled automatically according to the template you've chosen. If you're using the Visual Editor, you can also create new section and subsections via the buttons in the editor toolbar.
-
-\subsection{How to include Figures}
-
-First you have to upload the image file from your computer using the upload link in the file-tree menu. Then use the includegraphics command to include it in your document. Use the figure environment and the caption command to add a number and a caption to your figure. See the code for Figure \ref{fig:frog} in this section for an example.
-
-Note that your figure will automatically be placed in the most appropriate place for it, given the surrounding text and taking into account other figures or tables that may be close by. You can find out more about adding images to your documents in this help article on \href{https://www.overleaf.com/learn/how-to/Including_images_on_Overleaf}{including images on Overleaf}.
-
-\subsection{How to add Tables}
-
-Use the table and tabular environments for basic tables --- see Table~\ref{tab:widgets}, for example. For more information, please see this help article on \href{https://www.overleaf.com/learn/latex/tables}{tables}. 
-
-\begin{table}[H]
-\centering
-\begin{tabular}{l|r}
-Item & Quantity \\\hline
-Widgets & 42 \\
-Gadgets & 13
-\end{tabular}
-\caption{\label{tab:widgets}An example table.}
-\end{table}
-
-\subsection{How to add Comments and Track Changes}
-
-Comments can be added to your project by highlighting some text and clicking ``Add comment'' in the top right of the editor pane. To view existing comments, click on the Review menu in the toolbar above. To reply to a comment, click on the Reply button in the lower right corner of the comment. You can close the Review pane by clicking its name on the toolbar when you're done reviewing for the time being.
-
-Track changes are available on all our \href{https://www.overleaf.com/user/subscription/plans}{premium plans}, and can be toggled on or off using the option at the top of the Review pane. Track changes allow you to keep track of every change made to the document, along with the person making the change. 
-
-\subsection{How to add Lists}
-
-You can make lists with automatic numbering \dots
-
-\begin{enumerate}
-\item Like this,
-\item and like this.
-\end{enumerate}
-\dots or bullet points \dots
 \begin{itemize}
-\item Like this,
-\item and like this.
+    \item Teselacija je matematični koncept, ki se nanaša na prekrivanje ravnine z enakimi ali različnimi geometrijskimi oblikami brez prekrivanja. Te oblike so lahko trikotniki, kvadrati, šestkotniki,..., ki se ponavljajo na urejen način, da zapolnijo celotno površino. Več oblik dodajamo, bolj natančen bo naš objekt. 
+    \item Mozaičenje: razbitje površine na manjše koščke.
+    \item LOD (Level of Detail), tehnika, kjer se uporabljajo različne različice 3D modela z različnimi stopnjami podrobnosti glede na razdaljo modela od kamere. Torej, ko je objekt blizu kamere, se uporablja višji nivo (več teselacije), ko pa je daleč, pa nižji (manj teselacije). Namen LOD je izboljšati učinkovitost izrisa ter optimizacijo delovanja sistema. 
+    \item Ko pa aplikacija oz. program določi natančnost objektov, jih game engine uredi tako, da zmanjša število podatkov (manj teselacije).
+    \item Vedno delamo z ogljišči, vse ostalo je potem posledica.
+    \item Linearna transformacija: $p' = f(p)$, točko premaknemo drugam
+    \item Razteg/skaliranje: enakomeren oz. neenakomeren
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=100mm]{src/razteg_skaliranje.png}
+    \caption{Primer enakomernega ter neenakomernega skaliranja}
+    \end{figure}
+    \item Striženje: spreminjamo eno izmed osi  na podlagi vrednosti druge osi. Če želimo striženje za kot $\phi$, uporabimo kotangens kota.
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=40mm]{src/strizenje.png}
+    \caption{Primer striženja}
+    \end{figure} 
+    \item Zrcaljenje: zrcaljenje čez koordinatne osi. Če zrcalimo dvakrat, dobimo isto. Če želimo zrcalit čez os $x = y$, uporabimo: $p_x' = p_y$ in $p_y' = p_x$
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=75mm]{src/zrcaljenje.png}
+    \caption{Primer zrcaljenja preko Y osi}
+    \end{figure} 
+    \item Vrtenje: vedno vrtimo v nasprotno smer urinega kazalca okrog izhodišča. 
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=75mm]{src/vrtenje.png}
+    \caption{Primer vrtenja okrog izhodišča}
+    \end{figure}     
+    Izpeljava:
+    \begin{enumerate}
+        \item Zapis s polarnimi koordinatami: \\
+        $p_x = \lVert p \rVert \cos{\phi}$ \\
+        $p_y = \lVert p \rVert \sin{\phi}$
+        \item Vrtenje v polarnih koordinatah: \\
+        $p_x' = \lVert p \rVert \cos{(\phi + \theta)}$ \\
+        $p_y' = \lVert p \rVert \sin{(\phi + \theta)}$
+        \item Adicijski izreki kotnih funkcij: \\
+        $p_x' = \lVert p \rVert \cos{\phi} \cos{\theta} - \lVert p \rVert \sin{\phi} \sin{\theta}$ \\
+        $p_y' = \lVert p \rVert \cos{\phi} \sin{\theta} + \lVert p \rVert \sin{\phi} \cos{\theta}$
+        \item Pretvorba v kartezične koordinate: \\
+        $p_x' = p_x \cos{\theta} - p_y \sin{\theta}$ \\
+        $p_y' = p_x \sin{\theta} + p_y \cos{\theta}$
+    \end{enumerate}
+    \item Linearne transformacije, zapisane kot matrike:
+    \begin{itemize}
+        \item Nova točka = matrika $*$ točka
+        \item Matrika 2x2 za 2D
+        \item Matrika 3x3 za 3D
+    \end{itemize}
+    \begin{enumerate}
+        \item $p' = Mp$, nova točka = matrika $*$ točka
+    \end{enumerate}
 \end{itemize}
+
 
 \end{document}
