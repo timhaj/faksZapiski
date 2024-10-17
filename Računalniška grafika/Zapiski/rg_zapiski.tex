@@ -29,7 +29,7 @@ Osnovni pojmi, brez katerih žal ne gre
 \item vrstična matrika:  $\begin{bmatrix} 12,5 & -9,32 & 0 \end{bmatrix}$
 \item transponiranje: pomeni zamenjavo osi dveh matrik: $\begin{bmatrix} 1,3 & -4,1 & 0,0 \end{bmatrix}^T = \begin{bmatrix} 1,3 \\ -4,1 \\ 0,0 \end{bmatrix}$
 \item enakost matrik: dve matriki sta si enaki, če imata enako število elementov po obeh oseh, in so vsi vsebovani elementi na enakih mestih
-\item vektor: predstavljen kot matrika, pomeni premik iz točke v točko in vektorji nimajo lokacije
+\item vektor: predstavljen kot matrika, pomeni premik iz točke v točko, nimajo lokacije, smer gibanja
 \item seštevanje matrik: $a + b = c \iff c_i = a_i + b_i$, intuitivno: 
 \begin{figure}[H]
 \centering
@@ -42,7 +42,7 @@ Osnovni pojmi, brez katerih žal ne gre
 \item inverz za seštevanje: $a - a = a + -a = a + (-1)a=0 \iff \begin{bmatrix} 2 & 5 \end{bmatrix} - \begin{bmatrix} 2 & 5 \end{bmatrix} = \begin{bmatrix} 2 & 5 \end{bmatrix} + \begin{bmatrix} -2 & -5 \end{bmatrix}=\begin{bmatrix} 0 & 0 \end{bmatrix}$
 \item NORMA oz. dolžina vektorja: $h = \begin{bmatrix} x \\ y \end{bmatrix} \Longrightarrow \lVert h \rVert = \sqrt{x^2 + y^2}, oz. \lVert a \rVert = \sqrt{\sum_{i=1}^n a_i^2}$ (L2 norm oz. evklidska razdalja). Splošna norma: $\lVert a \rVert_p = \sqrt[p]{\sum_{i=1}^n |a_i|^p}$. Torej, če na izpitu reče druga splošna norma, namesto p pišeš 2. Neskončna norma $\to$ dolžina se bliža maksimalni vrednosti vektorja. 
 \item enotski vektor, pomeni vektor dolžine 1, $\lVert e \rVert = 1$
-\item normalizacija: $v = \begin{bmatrix} v_x \\ v_y \\ v_z \end{bmatrix} \Longrightarrow \hat{v} = v / \lVert v \rVert = \begin{bmatrix} v_x/\lVert v \rVert \\ v_y/\lVert v \rVert \\ v_z/\lVert v \rVert \end{bmatrix}, \hat{v} = $ enotskost vektorja 
+\item normalizacija: $v = \begin{bmatrix} v_x \\ v_y \\ v_z \end{bmatrix} \Longrightarrow \hat{v} = v / \lVert v \rVert = \begin{bmatrix} v_x/\lVert v \rVert \\ v_y/\lVert v \rVert \\ v_z/\lVert v \rVert \end{bmatrix}, \hat{v} = $ enotskost vektorja (podajo samo smer), posamezne elemente vektorja delimo z njegovo dolžino.
 \item skalarni produkt: $u = \begin{bmatrix} u_0 \\ u_1 \\ u_2 \end{bmatrix}, v = \begin{bmatrix} v_0 \\ v_1 \\ v_2 \end{bmatrix} \Longrightarrow u * v = u_0*v_0 + u_1*v_1 + u_2*v_2$. Pravimo mu tudi "detektor pravokotnosti", saj:
 \begin{enumerate}
     \item $u*v = 0 \to$ vektorja pravokotna
@@ -70,9 +70,9 @@ Osnovni pojmi, brez katerih žal ne gre
     \item $u * (v+w) = u*v + u*w$, distributivnost za seštevanje
     \item $(\alpha u)*v = u * (\alpha v) = \alpha * (u * v)$, homogenost za množenje s skalarjem
     \item $u \perp v \iff u * v = 0$, skalarni produkt ortogonalnih (pravokotnih) vektorjev
-    \item asociativnost: nedefinirana operacija
+    \item Asociativnost: nedefinirana operacija, vrstni red je pomemben
 \end{itemize}
-\item linearna neodvisnot, projekcija vektorja na vektor: $kv = \lVert w \rVert (w_u * v_u)*v_u$
+\item linearna neodvisnost, projekcija vektorja na vektor: $kv = \lVert w \rVert (w_u * v_u)*v_u$
 \begin{figure}[H]
 \centering
 \includegraphics[width=100mm]{src/projekcija_vektorja_na_vektor.png}
@@ -168,13 +168,13 @@ Lastnosti transponiranja:
 \section{Transformacije in homogene koordinate}
 
 \begin{itemize}
-    \item Teselacija je matematični koncept, ki se nanaša na prekrivanje ravnine z enakimi ali različnimi geometrijskimi oblikami brez prekrivanja. Te oblike so lahko trikotniki, kvadrati, šestkotniki,..., ki se ponavljajo na urejen način, da zapolnijo celotno površino. Več oblik dodajamo, bolj natančen bo naš objekt. 
+    \item Teselacija je matematični koncept, ki se nanaša na prekrivanje ravnine z enakimi (homogenimi, urejeno) ali različnimi (nehomogenimi, neurejeno) geometrijskimi oblikami brez prekrivanja. Te oblike so lahko trikotniki, kvadrati, šestkotniki,..., ki se ponavljajo na urejen način, da zapolnijo celotno površino. Več oblik dodajamo, bolj natančen bo naš objekt. 
     \item Mozaičenje: razbitje površine na manjše koščke.
     \item LOD (Level of Detail), tehnika, kjer se uporabljajo različne različice 3D modela z različnimi stopnjami podrobnosti glede na razdaljo modela od kamere. Torej, ko je objekt blizu kamere, se uporablja višji nivo (več teselacije), ko pa je daleč, pa nižji (manj teselacije). Namen LOD je izboljšati učinkovitost izrisa ter optimizacijo delovanja sistema. 
     \item Ko pa aplikacija oz. program določi natančnost objektov, jih game engine uredi tako, da zmanjša število podatkov (manj teselacije).
-    \item Vedno delamo z ogljišči, vse ostalo je potem posledica.
-    \item Linearna transformacija: $p' = f(p)$, točko premaknemo drugam
-    \item Razteg/skaliranje: enakomeren oz. neenakomeren
+    \item Vedno delamo z ogljišči, vse ostalo je potem posledica. S trikotniki opišemo ploskovne površine. 
+    \item Linearna transformacija: $p' = f(p)$, preslikave, ki preslikajo eno točko v drugo.
+    \item Razteg/skaliranje: enakomeren (uniformen) oz. neenakomeren (neuniformen)
     \begin{figure}[H]
     \centering
     \includegraphics[width=100mm]{src/razteg_skaliranje.png}
@@ -186,7 +186,7 @@ Lastnosti transponiranja:
     \includegraphics[width=40mm]{src/strizenje.png}
     \caption{Primer striženja}
     \end{figure} 
-    \item Zrcaljenje: zrcaljenje čez koordinatne osi. Če zrcalimo dvakrat, dobimo isto. Če želimo zrcalit čez os $x = y$, uporabimo: $p_x' = p_y$ in $p_y' = p_x$
+    \item Zrcaljenje: zrcaljenje čez koordinatne osi. Če zrcalimo dvakrat, dobimo isto. Če želimo zrcalit čez os $x = y$, uporabimo: $p_x' = p_y$ in $p_y' = p_x$ (x in y os se zamenjata). "Razteg z negativnim številom"
     \begin{figure}[H]
     \centering
     \includegraphics[width=75mm]{src/zrcaljenje.png}
@@ -203,13 +203,13 @@ Lastnosti transponiranja:
         \item Zapis s polarnimi koordinatami: \\
         $p_x = \lVert p \rVert \cos{\phi}$ \\
         $p_y = \lVert p \rVert \sin{\phi}$
-        \item Vrtenje v polarnih koordinatah: \\
+        \item Vrtenje v polarnih koordinatah: (povemo kot in radij (oddaljenost od izhodišča)) \\
         $p_x' = \lVert p \rVert \cos{(\phi + \theta)}$ \\
         $p_y' = \lVert p \rVert \sin{(\phi + \theta)}$
-        \item Adicijski izreki kotnih funkcij: \\
+        \item Adicijski izreki kotnih funkcij: ($\cos{(\phi + \theta)} = \cos{\phi}\cos{\theta}$, enako za $sin$) \\
         $p_x' = \lVert p \rVert \cos{\phi} \cos{\theta} - \lVert p \rVert \sin{\phi} \sin{\theta}$ \\
         $p_y' = \lVert p \rVert \cos{\phi} \sin{\theta} + \lVert p \rVert \sin{\phi} \cos{\theta}$
-        \item Pretvorba v kartezične koordinate: \\
+        \item Pretvorba v kartezične koordinate: (iz 1. izrazimo $\lVert p \rVert$, in se 3. pokrajša:)\\
         $p_x' = p_x \cos{\theta} - p_y \sin{\theta}$ \\
         $p_y' = p_x \sin{\theta} + p_y \cos{\theta}$
     \end{enumerate}
@@ -238,9 +238,9 @@ Lastnosti transponiranja:
 \begin{itemize}
     \item $p' = Mp + t$, linearne transformacije s premiki
     \item $v = \begin{bmatrix} v_x \\ v_y \\ v_z \end{bmatrix} = v_xe_x + v_ye_y + v_ze_z$, vektor zapisan tudi s pomočjo enotskih vektorjev
-    \item $p = \begin{bmatrix} p_x \\ p_y \\ p_z \\ 1 \end{bmatrix} = p_xe_x + p_ye_y + p_ze_z + o$, dodatek homogene koordinate (1 = točka, 0 = vektor), z njimi lahko izvajam premike
-    \item $p_h = \begin{bmatrix} wp_x \\ wp_y \\ wp_z \\ w \end{bmatrix} = wp_xe_x + wp_ye_y + wp_ze_z + wo$
-    \item $p_h = \begin{bmatrix} p_x \\ p_y \\ p_z \\ 1 \end{bmatrix}$, $v_h = \begin{bmatrix} v_x \\ v_y \\ v_z \\ 0 \end{bmatrix}$, $p_h' = p_h + v_h = \begin{bmatrix} p_x + v_x \\ p_y + v_y \\ p_z + v_z \\ 1 \end{bmatrix}$, dobim točko, če pa odštejem, dobim vektor
+    \item $p = \begin{bmatrix} p_x \\ p_y \\ p_z \\ 1 \end{bmatrix} = p_xe_x + p_ye_y + p_ze_z + o$, dodatek homogene koordinate (1 = točka, 0 = vektor), z njimi lahko izvajam premike (točka je 1, ker je odvisna od izhodišča (zato to prištejemo), vektor pa samo navaja premike (ni vezan na izhodišče sistema))
+    \item $p_h = \begin{bmatrix} wp_x \\ wp_y \\ wp_z \\ w \end{bmatrix} = wp_xe_x + wp_ye_y + wp_ze_z + wo$, če pa želimo prehod iz homogene v nehomogene elemente: vsako koordinato delimo z $w$
+    \item $p_h = \begin{bmatrix} p_x \\ p_y \\ p_z \\ 1 \end{bmatrix}$, $v_h = \begin{bmatrix} v_x \\ v_y \\ v_z \\ 0 \end{bmatrix}$, $p_h' = p_h + v_h = \begin{bmatrix} p_x + v_x \\ p_y + v_y \\ p_z + v_z \\ 1 \end{bmatrix}$, dobim točko, če pa odštejem, dobim vektor ("točki lahko prištejemo vektor in dobimo točko")
     \item Premik v homogenih koordinatah: $p' = T(t)p$, T = translate, premaknemo točko za točko $t$. Primer: $p = \begin{bmatrix} 
 p_x \\ p_y \\ p_z \\ 1 \end{bmatrix}, t = \begin{bmatrix} 
 t_x \\ t_y \\ t_z \\ 0 \end{bmatrix} \Longrightarrow p' = \begin{bmatrix} 
@@ -257,6 +257,7 @@ s_x & 0 & 0 & 0 \\ 0 & s_y & 0 & 0 \\ 0 & 0 & s_z & 0 \\ 0 & 0 & 0 & 1 \end{bmat
 \cos{\theta} & 0 & \sin{\theta} & 0 \\ 0 & 1 & 0 & 0\\ -\sin{\theta} & 0 &\cos{\theta} & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}$, $R_z(\theta) = \begin{bmatrix} \cos{\theta} & -\sin{\theta} & 0 & 0 \\ \sin{\theta} & \cos{\theta} & 0 & 0\\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}$ \\ 
 Vrtenje ima tudi inverzno operacijo, vendar samo, če poznamo kot: $R(\theta)^{-1} = R(-\theta) = R(\theta)^T$
     \item Striženje v homogenih koordinatah: $p' = Z(z_1,\dots,z_6)p$, Z = shear, $Z(z_1,\dots,z_6) = \begin{bmatrix} 1 & z_1 & z_2 & 0 \\ z_3 & 1 & z_4 & 0 \\ z_5 & z_6 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}$ \\ V 2D prostoru gre striženje po določeni koordinatni osi, v 3D pa po vzdolž ravnine.
+    \item Ortonorminirana baza: vektorji so med seboj pravokotni: če so matrike ortonorminirane, lahko za izračun inverza samo transponiramo
     \item Transformacijska matrika: matrika, v kateri lahko hkrati delamo več operacij
     \begin{figure}[H]
     \centering
@@ -267,7 +268,7 @@ Vrtenje ima tudi inverzno operacijo, vendar samo, če poznamo kot: $R(\theta)^{-
 
 \subsection{Veriženje transformacij}
 \begin{itemize}
-    \item $p' = M_3M_2M_1p$, najprej $M_1$, nato $M_2$ ter šele nato $M_3$
+    \item $p' = M_3M_2M_1p$, najprej $M_1$, nato $M_2$ ter šele nato $M_3$ (najprej tista, ki je najbližja točki)
     \item Eulerjevi koti: $R_E(\theta_h, \theta_p, \theta_r) = R_z(\theta_r)R_x(\theta_p)R_y(\theta_h)$
     \begin{figure}[H]
     \centering
@@ -290,23 +291,22 @@ Vrtenje ima tudi inverzno operacijo, vendar samo, če poznamo kot: $R(\theta)^{-
         \item $p^{'T} = p^TM_1^TM_2^TM_3^T$, transponiranje, obratni vrstni red
         \begin{figure}[H]
         \centering
-        \includegraphics[width=100mm]{src/vrstni_red_veriženja.png}
+        \includegraphics[width=100mm]{src/vrstni_red_verizenja.png}
         \caption{Primer, kako pomemben je vrstni red operacij}
         \end{figure} 
-        \item Vrstni red operacij: SRT → skaliranje → vrtenje → premiki
-        \item Vse operacije izvajamo preko izhodišča
+        \item Vrstni red operacij: SRT → skaliranje → vrtenje → premiki (dogovor). Vse operacije izvajamo preko izhodišča
     \end{enumerate}
     \item Transformacije vrtenja okrog poljubne točke: $p' = M_3M_2M_1p$, $p' = T(r)R(\theta)T(-r)p$
         \begin{figure}[H]
         \centering
-        \includegraphics[width=100mm]{src/vrtenje_okrog_poljubne_točke.png}
+        \includegraphics[width=100mm]{src/vrtenje_okrog_poljubne_tocke.png}
         \caption{Postopek vrtenja okoli poljubne točke}
         \end{figure} 
 \end{itemize}
 
 \subsection{Toge transformacije}
 \begin{itemize}
-    \item Vse transformacije, ki spreminjajo lokacijo in orientacijo, vendar ohranjajo obliko objekta.
+    \item Vse transformacije, ki spreminjajo lokacijo in orientacijo, vendar ohranjajo obliko objekta (kot, volumen). To sta samo premik in vrtenje.
 \end{itemize}
 
 \subsection{Prehodi med koordinatnimi sistemi}
@@ -318,11 +318,13 @@ Vrtenje ima tudi inverzno operacijo, vendar samo, če poznamo kot: $R(\theta)^{-
         \caption{Predstavitev točke v enem ter v drugem sistemu}
         \end{figure} 
     Tako lahko zapišemo: $p^{uvwq} = p_xx^{uvwq} + p_yy^{uvwq} + p_zz^{uvwq} + o^{uvwq}$, oz. $p^{uvwq} = \begin{bmatrix} x & y & z & o \end{bmatrix} \begin{bmatrix} p_x \\ p_y \\ p_z \\ 1 \end{bmatrix}$ \\
-    Kar lahko zapišemo v skupno transformacijsko matriko, hkrati pa dobimo tudi inverz, torej prehod iz (x,y,z,o) v (u,v,w,q) ter nazaj. Pri tem oznaka B pomeni operacije raztega, vrtenja, skaliranja ter striženja.
+    Kar lahko zapišemo v skupno transformacijsko matriko, hkrati pa dobimo tudi inverz, torej prehod iz (x,y,z,o) v (u,v,w,q) ter nazaj. Pri tem oznaka B pomeni operacije raztega, vrtenja, skaliranja ter striženja. B je tudi ortonorminirana baza, torej je inverz samo transponiranje.
         \begin{figure}[H]
         \centering
-        \includegraphics[width=150mm]{src/prehajanje_koord_sistemov_2.png}
+        \includegraphics[width=100mm]{src/prehajanje_koord_sistemov_2.png}
         \end{figure} 
 \end{itemize}
+
+\section{Projekcije}
 
 \end{document}
