@@ -325,6 +325,175 @@ Vrtenje ima tudi inverzno operacijo, vendar samo, če poznamo kot: $R(\theta)^{-
         \end{figure} 
 \end{itemize}
 
+\begin{itemize}
+    \item Ortogonalna/ortonormalna matrika = njen inverz je transponirana matrika $A^{-1} = A^T$.
+    \item Za prehod iz levosučnega v desnosučni koordinatni sistem - če imamo dva vektorja, ki določata ravnino, zrcalimo en vektor. 
+    \item Kako predstavimo vektor v homogenih koordinatah - dodamo en stolpec, ki predstavlja izhodišče.
+    \item Zrcaljenje ni toga transformacija.
+    \item Prehod iz homogenih v nehomogene koordinate - vzamemo zadnji stolpec in z njim delimo vse ostale stolpce (pri vektorjih tega nimamo, ker je zadnji stolpec vse 0, pri točkah pa imamo).
+    \item Kako pridobimo nasprotno operacijo za vrtenje - če poznamo kot, vrtimo v negativni kot; če poznamo matriko, jo transponiramo, ker je ortogonalna.
+    \item Vrtenje okoli točke = sosledje operacij - premik točke v izhodišče, premik okoli izhodišča, premik nazaj iz točke - zmnožimo matrike med sabo.
+\end{itemize}
+
 \section{Projekcije}
+
+\subsection{Vrste}
+\begin{itemize}
+    \item Projekcija je 2D ravnina, ki izgleda 3D, daje optično iluzijo "globine" → Paralaksa: vzporedne premice se stikajo nekje v neskončnosti (prostor ima globino). Gibalna paralaksa: predmeti ki so bližje, se bodo premikali hitreje. 
+    \item Vrste:
+    \begin{enumerate}
+        \item Pravokotna projekcija: gledamo pravokotno na 2D ravnino (vzdolž ene osi), uporablja se predvsem v tehnični dokumentaciji, ko poznamo merila objektov
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=70mm]{src/pravokotna_projekcija.png}
+        \caption{Primeri pravokotne projekcije (od zgoraj, čelna ter stranska)}
+        \end{figure}   
+        \item Aksonometrične oblike v pravokotni projekciji: objekt gledamo pod določenim kotom $(\alpha, \beta, \gamma)$, kar prikaže objekt v 3D. Poznamo trimetrične (vsak kot drugačen, torej 3 različni koti, X Y in Z so v različnem razmerju), dimetrične (2 različna kota, višina in širina sta isti, samo globina je polovična) ter izometrična (1 kot za vse, torej X Y in Z so v istem razmerju).
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=90mm]{src/aksonometricne_oblike.png}
+        \caption{Primeri aksonometričnih oblik (trimetrična, dimetrične ter izometrična)}
+        \end{figure} 
+        \item Poševna projekcija: objekt vlečemo diagonalno na ravnino (namesto da gledamo pod kotom, ga poravnamo ter vlečemo diagonalno), vidimo tudi globino ter realne dimenzije. Poznamo:
+        \begin{itemize}
+            \item kavalirska: globina je v enakem razmerju
+            \item kabinetna: globina polovično manjša
+        \end{itemize}
+        Obe podvrsti se razlikujeta v kotu vpadnic, rezultat pa je drugačna percepcija globine.
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=80mm]{src/posevna_projekcija.png}
+        \caption{Primera poševnih projekcij (kavalirska ter kabinetna)}
+        \end{figure} 
+        \item Perspektivna projekcija: predmet v 3D, poznamo:
+        \begin{itemize}
+            \item enobežna: eno lice poravnano z ravnino
+            \item dvobežno: dve ravnini poravnani
+            \item tribežna: poljuben kot
+        \end{itemize}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=80mm]{src/perspektivna_projekcija.png}
+        \caption{Primeri perspektivnih projekcij (enobežna, dvobežna ter tribežna)}
+        \end{figure} 
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Grafični cevovod}
+\begin{itemize}
+    \item Komunikacija s strojno opremo, vanj vstopa ena točka naenkrat. 
+    \item Procedura:
+    \begin{enumerate}
+        \item Model: izračuna/določi se geometrija objekta (točke (ki določajo ogljišča), povezave med točkami → ploskve), lastnosti ogljišč (barve, koordinate teksture,...), teksture, luči, kamera. Koordinatni sistem, v katerem je objekt trenutno, je poravnan z eno osjo oz. ogljiščem.
+        \item Transformacija modela in pogleda: objekt pozicioniramo v večji svet (koordinatni sistem sveta), katerega gledamo preko projekcije (koordinatni sistem kamere). Točke iz koord. sistema predmeta pretvorimo v koord. sistem pogleda.
+        \item Izračun osvetlitve: Sprehodimo se čez vsak deklariran vir svetlobe, ter izračunamo, kako osvetljena je točka glede na položaje luči.
+        \item Projekcija: prehod v normaliziran koordinatni sistem, predstavlja pogled kamere (prehod iz 3D koordinat v 2D) → homogene koordinate transformira v tretji koordinatni sistem. 
+        \item Rasterizacija in prekrivanje: odgovarjamo na dve vprašanji:
+        \begin{itemize}
+            \item Kako napolnit vsebino izračunanih primitivov? (izris primitivov)
+            \item Čim hitrejši izris ter katere primitive izrišemo? (ugotavljanje vidnosti). En znan algoritem je PAINTERS ALGORITHM (zelo potraten), primitive sortiramo glede na razdaljo kamere, vsakega pobarvamo, ter tisti, ki bo na koncu najbližji kamere, bo viden (pri tem algoritmu pomaga predpomnilnik (Z-buffer), ki hrani globino).
+        \end{itemize}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=150mm]{src/grafični_cevovod.png}
+        \caption{Grafični cevovod}
+        \end{figure} 
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Koordinatni sistemi}
+\begin{itemize}
+    \item Koord. sistem predmeta: en predmet v svojem koord. sistemu: $p^{object}$
+    \item Koord. sistem sveta: način, kako različne predmete vežemo v prostor (veriženje transformacij): $p^{world} = Mp^{object}$. V svet vmeščamo predmete z verigo transformacij → vse te lahko zmnožimo vnaprej in dobimo matriko M, ki vse to opiše; nato vsako točko pomnožimo z matriko M.
+    \item Koord. sistem pogleda: umeščanje kamere v prostor ("navidezen element"): $p^{camera} = C^{-1}Mp^{object}$. pogled → svet = $C$, medtem ko svet → pogled = $C^{-1}$, $C = \begin{bmatrix} u & v & w & e \end{bmatrix}$ (podamo točko iz katere gledamo (e (eye)) ter točko kaj gledamo (f = focus) → iz teh dveh vektorjev lahko izračunamo, kaj gledamo. UP → vektor, ki kaže kaj je zgoraj (kako je rotirana kamera). -Z (negativna os), Y pozitiven (v zrak), X je desno poravnan. Platno se nahaja nekje med kamero in objektom. Da pogledamo na predmet, moramo narediti inverz vmeščanja kamere v prostor ($C^{-1}$)
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=100mm]{src/koordinatni_sistem_pogleda.png}
+        \caption{Koordinatni sistem pogleda}
+        \end{figure} 
+    \item Perspektivna projekcija: kako izračunaš $p'$, če veš origin in fokus.
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=75mm]{src/perspektivna_projekcija_koord.png}
+        \caption{Perspektivna projekcija}
+        \end{figure}     
+    \item Vzporedna projekcija: vpadnice iz točk so vzporedne
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=75mm]{src/vzporedna_projekcija.png}
+        \caption{Vzporedna projekcija}
+        \end{figure}     
+\end{itemize}
+
+\subsection{Projekcijska transformacija}
+\begin{itemize}
+    \item Vzporedna pravokotna projekcija: da izračunaš $p'$, daš Z = 0
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=50mm]{src/vzporedna_pravokotna_projekcija.png}
+        \caption{Vzporedna pravokotna projekcija}
+        \end{figure}     
+    \item Perspektivna projekcija: $p'$ izračunamo s pomočjo trikotniškega pravila → razmerje dveh oddaljenosti = dveh višin. \\
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=75mm]{src/perspektivna_projekcija_transformacija.png}
+        \caption{Perspektivna projekcija, primer}
+        \end{figure} \\
+     Preko trikotniškega pravila dobimo: $\frac{p_y'}{d} = \frac{p_y}{p_z}, \frac{p_x'}{d} = \frac{p_x}{p_z}, p_z' = d$, d je globina, kjer se nahaja projekcijska ravnina. \\ TRIK: uporaba homogenih komponent, realiziramo celotno projekcijo naenkrat (pomaga pri parallel computing, ker je vsaka točka zase). Tako dobimo transformacijsko matriko: $\begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 1/d & 0 \end{bmatrix} \begin{bmatrix} p_x \\ p_y \\ p_z \\ 1 \end{bmatrix} = \begin{bmatrix} p_x \\ p_y \\ p_z \\ p_z/d \end{bmatrix} \Longrightarrow \begin{bmatrix} p_xd/p_z \\ p_yd/p_z \\ d \\ 1 \end{bmatrix}$. Če pa tretiramo $d$ kot oddaljenost, pa damo povsod kjer je d v matriki nasproten predznak (torej minus).
+\end{itemize}
+
+\subsection{Vidno polje}
+\begin{itemize}
+    \item Terminologija:
+        \begin{itemize}
+            \item Near clipping in far clipping edge → kar je preblizu/predaleč ne bomo videli. 
+        \end{itemize}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=75mm]{src/vidno_polje.png}
+        \caption{Prikaz vseh terminologij vidnega polja}
+        \end{figure}
+    \item Perspektivna projekcija:
+    \begin{itemize}
+        \item 4 stran piramida, pove kaj gledamo/kaj bomo videli (prirezana piramida gledana), ostalo ne pošiljaj v cevovod.
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=50mm]{src/vidno_polje_perspektivno.png}
+        \caption{Perspektivna projekcija vidnega polja}
+        \end{figure}   
+        \item simetrična piramida → enako razmerje višine in širine stranic (največkrat gledamo na sredino okna, ki je enako oddaljena od zgornjega, spodnjega, levega, desnega roba → vem kakšen je vertikalni zorni kot, rabim samo še spredaj in zadaj)
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=50mm]{src/vidno_polje_simetricno.png}
+        \caption{Perspektivna projekcija vidnega polja, simetrično}
+        \end{figure}        
+    \end{itemize}
+    \item Vzporedna projekcija: kvader/paralelepiped gledanja
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=50mm]{src/vidno_polje_vzporedno.png}
+        \caption{Vzporedna projekcija vidnega polja}
+        \end{figure} 
+\end{itemize}
+
+\subsection{Izločanje in obrezovanje}
+\begin{itemize}
+    \item Optimizacija izrisa, da ne render-amo celotnega vidnega polja. To naredimo tako, da piramido in kvader združimo v normaliziran sistem koordinat od $\begin{bmatrix} -1 \\ -1 \\ -1 \end{bmatrix}$ do $\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}$. Pri tem se vzporedna skrči (glede na razdaljo spredaj in zadaj), pri perspektivni pa se zadnja skrči, sprednja pa raztegne (to pomeni da bodo objekti bližje kamere večji, objekti dlje pa manjši. 
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=50mm]{src/obrezovanje_normalizacija.png}
+        \caption{Obrezovanje, normalizirane koordinate}
+        \end{figure}     
+    Vse to lahko združimo sedaj v projekcijsko matriko. Poznamo več vrst:
+    \begin{enumerate}
+        \item Perspektivna projekcija, prirezana piramida gledanja: $P_p(l,r,t,b,n,f) = \begin{bmatrix} \frac{2*n}{r-l} & 0 & \frac{r+l}{r-l} & 0 \\ 0 & \frac{2*n}{t-b} & \frac{t+b}{t-b} & 0 \\ 0 & 0 & -\frac{f+n}{f-n} & -\frac{2*n*f}{f-n} \\ 0 & 0 & -1 & 0 \end{bmatrix}$, l = left, r = right, t = top, b = bottom, n = near, f = far
+        \item Perspektivna projekcija, simetrična piramida gledanja: $P_p(\alpha, a, n, f) = \begin{bmatrix} \frac{1}{a-\tan{\frac{\alpha}{2}}} & 0 & 0 & 0 \\ 0 & \frac{1}{\tan{\frac{\alpha}{2}}} & 0 & 0 \\ 0 & 0 & -\frac{f+n}{f-n} & -\frac{2*n*f}{f-n} \\ 0 & 0 & -1 & 0 \end{bmatrix}$, $\alpha$ = kot kamere, a = razmerje (stiskanje/povečevanje), n = near, f = far
+        \item Pravokotna projekcija: $P_o(l,r,t,b,n,f) = \begin{bmatrix} \frac{2}{r-l} & 0 & 0 & -\frac{r+l}{r-l} \\ 0 & \frac{2}{t-b} & 0 & -\frac{t+b}{t-b} \\ 0 & 0 & -\frac{2}{f-n} & -\frac{f+n}{f-n} \\ 0 & 0 & 0 & 1 \end{bmatrix}$
+        \item Pravokotna projekcija, simetrična: $P_o(w,h,n,f) = \begin{bmatrix} \frac{2}{w} & 0 & 0 & 0 \\ 0 & \frac{2}{h} & 0 & 0 \\ 0 & 0 & -\frac{2}{f-n} & -\frac{f+n}{f-n} \\ 0 & 0 & 0 & 1 \end{bmatrix}$, w = width, h = height, n = near, f = far. Ni več perspektive, imamo pa translacijo, da nam zamakne kvader na sredino normaliziranega koordinatnega sistema.
+        \item Poševna projekcija, zamik sveta s pomočjo striženja (zamaknemo koord. objektov), nato pa izvedemo pravokotno projekcijo. $P = P_oH(\theta, \phi) = P_o \begin{bmatrix} 1 & 0 & \cot{\theta} & 0 \\ 0 & 1 & \cot{\phi} & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}$
+        \item Matrika naprave oz. transformacija v koordinate naprave, pove kako za ekrane (monitorje), razpon (0,0) do npr. (1920, 1080) izrišemo posamezne piksle na zaslon: \\ $D(x_o, x_1, y_0, y_1) = \begin{bmatrix} \frac{x_1 - x_0}{2} & 0 & 0 & \frac{x_0 + x_1}{2} \\ 0 & -\frac{y_1 - y_0}{2} & 0 & \frac{y_0 + y_1}{2} \\ 0 & 0 & \frac{1}{2} & \frac{1}{2} \\ 0 & 0 & 0 & 1 \end{bmatrix}$. Pri tem pazi, ker sta X in Y obrnjena, torej z večanjem X greš bolj levo, pri Y pa bolj dol.
+        \item Transformacijska veriga: vse kar smo obdelali, združimo: $p' = DPC^{-1}Mp$, D = koord. sistem naprave, P = normaliziran koord. sistem, C = koord. sistem pogleda, M = koord. sistem sveta, p = koord. sistem predmeta. Točka je tako predstavljna z $p' = \begin{bmatrix} p_x' \\ p_y' \\ p_z' \\ w' \end{bmatrix}$, posamezen piksel/slikovni element pa dobimo z $p_x'/w'$ in $ p_y'/w'$
+    \end{enumerate}
+\end{itemize}
 
 \end{document}
