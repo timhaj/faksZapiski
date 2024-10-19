@@ -1,0 +1,9 @@
+Konceptualno načrtovanje
+
+Konceptualno načrtovanje s pomočjo konceptualnega modela poskrbi za opis pomena podatkov, potrebnih za poslovno domeno.
+- Gre za prenos pomena (semantike) v model.
+- Konceptualnega načrtovanje ne moremo avtomatizirati!
+
+svet -> konceptualni model -> logični model -> fizični model
+
+Koraki konceptualnega načrtovanje K1.1 - K1.9
