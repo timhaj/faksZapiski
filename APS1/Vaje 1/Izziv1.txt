@@ -1,0 +1,7 @@
+Zakaj so na časi pri vas drugačni kot v zgornji tabeli? Ker je to odvisno od hitrosti naprave (CPE, RAM,...)
+Kateri algoritem je hitrejši? Dvojiško iskanje.
+Kdaj bi lahko bil počasnejši algoritem hitrejši? V primeru ko bi bile operacije zapisovanja (write) časovno drage.
+Kako se čas iskanja odvisen od velikosti naloge (linearno, kvadratno, ...)? Pri linearnem je linearno (n), pri dvojiško pa je logaritmično (log n)
+Je časovna odvisnost dvojiškega iskanja bližje linearni ali konstantni? Konstantni.
+Ali lahko napišemo boljši algoritem (za naš primer)? Ne.
+Katere so težave tovrstnega določanja časovne zahtevnosti? Linearno iskanje ne rabi nujno imeti urejen seznam, dvojiško iskanje pa ja, s tem dajemo enemu najboljše pogoje, drugega pa pustimo tako kot je.
