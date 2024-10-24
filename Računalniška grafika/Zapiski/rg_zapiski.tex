@@ -496,4 +496,86 @@ Vrtenje ima tudi inverzno operacijo, vendar samo, če poznamo kot: $R(\theta)^{-
     \end{enumerate}
 \end{itemize}
 
+\section{Krivulje in ploskve}
+\begin{itemize}
+    \item V računalniški grafiki ni zaoblenih robov.
+    \item Krivulje nastanejo, ko iz dovolj velike razdalje gledamo ravno površino.
+    \item Uporablja se v risbah, skicah, grafih, tipografijah (TTF - true type font), modeliranje,...
+    \item podajanje krivulj: krivulje podamo kot množico točk, te so lahko:
+    \begin{enumerate}
+        \item kontrolne: tiste točke, ki vplivajo na krivuljo (vpliv na krivuljo je lokaliziran)
+        \item interpolirane: tiste točke, skozi katere krivulja gre. Če bi krivulja imela le interpolirane točke, bi bilo neskončno možnih predstavitev krivulje.
+    \end{enumerate}
+    \item Hermitska krivulja: $q_0$ in $q_1$ aproksimirata krivuljo, krivulja postane interpolirana, tangenta pa pove, v katero smer krivulja potuje. 
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=50mm]{src/hermitska_krivulja.png}
+        \caption{Primer hermitske krivulje}
+        \end{figure}    
+    \item Enačba krivulje: krivuljo lahko matematično (v obliki grafov) zapišemo na 3 načine:
+    \begin{enumerate}
+        \item eksplicitno: povemo 1 odvisno koordinato, ki temelji na neodvisni, npr. $p_y = kp_x + m$. Problem: pri isti vrednosti x dobiš enako vrednost, ne moreš zapisat krivulje, ki se križa v eni točki. 
+        \item implicitno: uporabimo obe koordinati in enačimo z 0, sedaj lahko zapišemo krožnice ($p_x^2 + p_y^2 - r^2 = 0$), parabole, vendar še zmeraj ne moreš zapisat krivulj, ki se križajo. Prednost tega pristopa je, da če veš X, lahko izračunaš Y ter lahko izveš, ali se določena točka nahaja v/izven krivulje ($< 0$ = znotraj, $ > 0$ = izven).
+        \item parametrično: zapis krivulje ni odvisen od koord. sistema. Vsako koordinato se zapiše kot funkcijo, imamo opravka tudi s polinomi. Točka kot funkcija ene spremenljivke pomeni sprehod po krivulji oz. sprehod po zalogi vrednosti funkcije. V vsaki točki lahko tudi izračunamo odvod, s tem dobimo tangento, ki pa predstavlja smer gibanja točk. $p(t) = \begin{bmatrix} p_x(t) \\ p_y(t) \end{bmatrix}, p_x(t) = f(t), p_y(t) = g(t)$
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=50mm]{src/parametricna_krivulja.png}
+        \caption{Primer parametriče krivulje, vidimo lahko sprehod po zalogi vrednosti $[0,1]$ ter tangente.}
+        \end{figure}   
+    \end{enumerate}
+    \item Polinomska funkcija: $f(t) = \sum_{i=0}^n c_it^i$, vsota i do n (št. prostostih stopenj) koeficientov pomnoženih z neodvisno komponento t, na i-to potenco. Krivulja n-te stopnje ima (n+1) koeficientov/členov ter lahko (n-1)-krat zamenja smer. 
+\end{itemize}
+
+\subsection{Polinomske krivulje}
+\begin{itemize}
+    \item Razžirjena polinomska funkcija ima n dimenzij, namesto koeficientov imamo stolpčne matrike. $p(t) = \sum_{i=0}^n c_it^i$
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=75mm]{src/zapis_polinomske_krivulje.png}
+        \caption{Primer zapisa linearne krivulje}
+        \end{figure} 
+    \item Linearna interpolacija dveh točk: funkcija lerp: $p(t) = lerp(t, p_0, p_1)$. Točki $p_0$ in $p_1$ predstavljata $t=0$ in $t=1$. Pri tem je t sprehod od $p_0$ do $p_1$, s tem da ga vlečeš po zalogi vrednosti. Imamo 3 različne predstavitve:
+    \begin{enumerate}
+        \item Utežena vsota dveh točk: $p(t) = p_0(1-t) + p_1t = p_0B_0(t) + p_1B_1(t)$. Funkciji $B_0(t) = 1 - t$ in $B_1(t) = t$ sta uteži (blending function), in če v katerikoli točki sešteješ njuni vrednosti, dobiš 1 (utežena vsota dveh točk). 
+        \item Zapis v obliki polinoma: $p(t) = p_0 + (p_1 - p_0)t = p_0 + vt$. Pri tem $v = p_1 - p_0$ predstavlja smer gibanja točk oz. kako se premaknit do cilja. 
+        \item Matrični zapis: $p(t) = GBT(t) = \begin{bmatrix} p_0 & p_1 \end{bmatrix} \begin{bmatrix} 1 & -1 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ t \end{bmatrix}$, G = geometrij oz. točke ki jih podam, B = matrika geometrijske baze oz. matrika ki podaja mešalne funkcije, ter T = matrika polinoma. Če množimo najprej GB skupaj ter nato s T, dobimo zapis koeficientov s polinomi, če pa BT ter nato z G, pa zapis točk z utežmi.
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=100mm]{src/matricni_zapis.png}
+        \end{figure}  
+    \end{enumerate}
+    \item Pri izračunu tangente krivulje, je to najlažje v matričnem zapisu, saj se matrika T spremeni iz $1, t$ v $0, 1$.
+\end{itemize}
+
+\subsection{Hermitske krivulje}
+\begin{itemize}
+    \item Kubični polinomi
+    \item Podati moramo začetno in končno točko, ter vektorja, ki predstavljata odvod (oz. tangenti na krivuljo). Koncept se posreduje v Bezierjeve krivulje. 
+\end{itemize}
+
+\subsection{Bezierjeve krivulje}
+\begin{itemize}
+    \item "Konveksna ovojnica kontrolnih točk"
+    \item Konveksna ovojnica: povezane točke, ki predstavljajo lik (vsaj 4 točke). Točke ne zapustijo krivulje.
+    \item Kontrolni poligon: nastala krivulja ne bo večkrat zamenjali smeri kot ta poligon (točke povežemo po vrstnem redu).
+    \item Prva in zadnja točka sta interpolirani, vse ostale pa na krivuljo vplivajo (kontrolne točke).
+    \item de Casteau konstrukcija: vzameš t pri določeni vrednosti in povežeš po linearni interpolaciji z drugimi vrednostimi (q), to rekurzivno ponavljaš (za vsako vrednost t) in dobiš krivuljo. 
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=120mm]{src/de_casteau_kontrukcija.png}
+        \caption{de Casteau kontrukcija, intuitivno}
+        \end{figure}     
+    \item Utežena vsota kontrolnih točk: $B_1$ in $B_2$ zalogo vrednosti 1 pri t nikoli ne bosta dosegla (gresta proti njej, ampak ne čež njo, ker ti dve povlečeta k sebi).
+    \item Bernsteinovi polinomi: mešalna funkcija B s stopnjo.
+    \item Pri matričnem zapisu, vse krivulje imajo isto matriko geometrijske baze, le matrika polinoma se spreminja.
+    \item Pri risanju Bezierjevih krivulj, pogledaš kako ravna je krivulja v določeni točki in če je dovolj ravna, bo na tistem območju malo točk, če ne pa več točk.
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=75mm]{src/risanje_bezierjevih_krivulj.png}
+        \end{figure}      
+\end{itemize}
+
+\subsection{Sestavljene krivulje}
+
+
 \end{document}
